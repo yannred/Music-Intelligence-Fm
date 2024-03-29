@@ -1,60 +1,30 @@
-<div class="flex">
-  <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/average_scrobbles_daily.html.twig' with {
-      'value' : 74,
-      'subText': 'versus 21 (2023)',
-      'progress' : '4%',
-      'progressType' : 'up'
-    } %}
+<div style="height: 200px; width: 373px;" class="flex flex-col native-widget-container !p-0">
+
+  <div class="text-gray-900 dark:text-white text-md p-2 flex flex-wrap font-extrabold text-center border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-red-600">
+    Maximum scrobbles
   </div>
-  <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/average_scrobbles_weekly.html.twig' with {
-        'value' : 451,
-        'subText': 'versus 254 (2023)',
-        'progress' : '12%',
-        'progressType' : 'up'
-      } %}
-  </div>
-  <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/average_scrobbles_monthly.html.twig' with {
-        'value' : 1559,
-        'subText': 'versus 943 (2023)',
-        'progress' : '47%',
-        'progressType' : 'down'
-      } %}
-  </div>
-</div>
-<div class="flex">
-  <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/max_scrobble_per_day.twig' with {
+
+  <div class="my-auto"></div>
+
+  <div class="flex grid grid-cols-3 gap-3 self-center">
+
+    {% include 'my_statistics/statistic_widget/max_scrobble_daily.twig' with {
       'value' : 79,
-      'caption': 'april 2019',
-      'subText': '2nd : febr. 2024 (120)'
+      'subText': 'april 2019'
     } %}
-  </div>
-  <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/max_scrobble_per_week.twig' with {
-        'value' : 310,
-        'caption': 'oct. 2017',
-        'subText': '2nd : may 2022 (299)'
-      } %}
-  </div>
-  <div class="m-0.5">
-    {% include 'my_statistics/statistic_widget/max_scrobble_per_month.twig' with {
-        'value' : 459,
-        'caption': 'sept. 2019',
-        'subText': '2nd : march 2020 (419)'
-      } %}
+
+    {% include 'my_statistics/statistic_widget/max_scrobble_weekly.twig' with {
+      'value' : 310,
+      'subText': 'oct. 2017'
+    } %}
+
+    {% include 'my_statistics/statistic_widget/max_scrobble_monthly.twig' with {
+      'value' : 1859,
+      'subText': 'sept. 2019'
+    } %}
+
   </div>
 
-
-
-
-
-
-
-
-
-
+  <div class="my-auto"></div>
 
 </div>

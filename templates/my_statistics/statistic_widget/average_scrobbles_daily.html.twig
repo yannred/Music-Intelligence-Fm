@@ -1,5 +1,5 @@
 {% include 'my_statistics/statistic_widget/dark_widget.html.twig' with {
   'title': 'Daily',
   'subText': subText,
-  'value': value
+  'value': value|number_format( 0, ',', ' ')
 } %}
