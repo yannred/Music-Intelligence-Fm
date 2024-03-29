@@ -54,7 +54,6 @@ Upcoming features :
 
 ### Front-end Libraries
 
-- [Jquery](https://jquery.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Chart.js](https://www.chartjs.org/)
 - [Gridstack.js](https://gridstackjs.com/)
