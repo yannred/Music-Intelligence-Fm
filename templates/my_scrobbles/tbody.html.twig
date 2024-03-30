@@ -10,28 +10,38 @@
     {% set lovedClass = 'loved-track' %}
   {% endif %}
 
+  {% if mini is defined and mini == true %}
+    {% set track_name = scrobble[0].track.name|truncateAndSuspension(35) %}
+    {% set artist_name = scrobble[0].track.artist.name|truncateAndSuspension(35) %}
+    {% set album_name = scrobble[0].track.album.name|truncateAndSuspension(35) %}
+  {% else %}
+    {% set track_name = scrobble[0].track.name %}
+    {% set artist_name = scrobble[0].track.artist.name %}
+    {% set album_name = scrobble[0].track.album.name %}
+  {% endif %}
+
   <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
 
     <td class="px-6 py-4">
       <a href="{{ scrobble[0].track.name|youtubeSearchLink(scrobble[0].track.artist.name) }}" target="_blank" rel="noopener noreferrer">
         <img src="{{ asset('imgs/youtube.png') }}" style="width: 34px" alt="Search on Youtube" class="inline-block mr-3">
       </a>
-      <a href="#" onclick="loveTrack(this)" class="button-love {{ lovedClass }}" id="{{ 'loved-track-id-' ~ scrobble[0].track.id }}">
+      <a href="" onclick="loveTrack(this)" class="button-love {{ lovedClass }}" id="{{ 'loved-track-id-' ~ scrobble[0].track.id }}">
         <span>&nbsp;</span>
       </a>
     </td>
 
     <th scope="row" class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-      {% if image_url is defined %}
-        <img src='{{ image.url }}' alt='{{ scrobble[0].track.name }}' class="inline-block mr-3">
+      {% if scrobble.image_url is defined %}
+        <img src='{{ scrobble.image_url }}' alt='{{ track_name }}' class="inline-block mr-3">
       {% endif %}
 
-      {{ scrobble[0].track.name }}
+      {{ track_name }}
     </th>
 
-    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ scrobble[0].track.artist.name }}</td>
+    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ artist_name }}</td>
 
-    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ scrobble[0].track.album.name }}</td>
+    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ album_name }}</td>
 
     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ scrobble[0].timestamp|date('m/d/Y H:i:s') }}</td>
 

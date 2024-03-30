@@ -39,11 +39,15 @@ class ScrobbleRepository extends ServiceEntityRepository
     $user = $this->security->getUser();
 
     return $this->createQueryBuilder('scrobble')
-      ->select('scrobble, user, lovedTrack, track_loved, track_loved.id as loved_track')
+      ->select('scrobble, track, album, user, image, lovedTrack, track_loved, track_loved.id as loved_track, image.url as image_url')
       ->leftJoin('scrobble.user', 'user')
       ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = scrobble.track')
       ->leftJoin('lovedTrack.track', 'track_loved')
+      ->leftJoin('scrobble.track', 'track')
+      ->leftJoin('track.album', 'album')
+      ->leftJoin('album.image', 'image')
       ->where('scrobble.user = :user')
+      ->andWhere('image.size = 1')
       ->setParameter('user', $user->getId())
       ->orderBy('scrobble.timestamp', 'DESC')
       ->getQuery();

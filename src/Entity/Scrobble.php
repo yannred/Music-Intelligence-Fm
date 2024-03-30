@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ScrobbleRepository::class)]
 class Scrobble
 {
+  const LIMIT_RECENT_TRACKS = 5;
+
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]

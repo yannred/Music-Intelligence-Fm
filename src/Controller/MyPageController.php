@@ -57,7 +57,7 @@ class MyPageController extends CustomAbsrtactController
     $scrobblePagination = $paginator->paginate(
       $query,
       $request->query->getInt('page', 1),
-      MyScrobblesController::LIMIT_PER_PAGE
+      Scrobble::LIMIT_RECENT_TRACKS
     );
 
     //top tracks

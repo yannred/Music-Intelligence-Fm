@@ -2,9 +2,14 @@
   {% set tbodyUrl = 'base/html/table/tbody.html.twig' %}
 {% endif %}
 
+{% if not mini is defined %}
+  {% set mini = false %}
+{% endif %}
+
+
 
 <section class="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
-  <div class="px-4 mx-auto max-w-screen-2xl lg:px-12">
+  <div class="px-4 mx-auto max-w-screen-2xl">
     <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
 
       {%  if pagination == true %}
@@ -16,7 +21,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           {% include 'base/html/table/thead.html.twig' with {'thead': thead} %}
-          {% include tbodyUrl with {'tbody': tbody} %}
+          {% include tbodyUrl with {'tbody': tbody, 'mini' : mini} %}
         </table>
       </div>
 

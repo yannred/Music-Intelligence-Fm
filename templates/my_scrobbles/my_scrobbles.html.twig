@@ -6,11 +6,18 @@
     {% set pagination = false %}
   {% endif %}
 
+  {% if mini is defined and mini == 1 %}
+    {% set mini = true %}
+  {% else %}
+    {% set mini = false %}
+  {% endif %}
+
   {% include 'base/html/table/table.html.twig' with {
     'thead' : myScrobblesThead,
     'tbody': scrobbles,
     'tbodyUrl' : myScrobblesTbodyUrl,
-    'pagination' : pagination
+    'pagination' : pagination,
+    'mini' : mini,
   } %}
 
 </div>
