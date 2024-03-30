@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\SubTypeModel;
+namespace App\Data\Statisitc\SubTypeModel;
 
 use App\Data\ChartOptions;
 

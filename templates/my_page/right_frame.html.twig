@@ -3,23 +3,17 @@
 </div>
 <br />
 
-{% include 'my_statistics/statistic_widget/compare_scrobbles_per_period.html.twig' %}
+{% include 'statistic_widget/compare_scrobbles_per_period.html.twig' %}
 <br />
 
-<div style="height: 200px;" class="native-widget-container">
-    {% include 'my_statistics/statistic_widget/verticalSkeletonWidget.html.twig' with {'height': 180} %}
-  <canvas style="" class="native-widget-canvas" id="ncanvas-1"></canvas>
-</div>
+{% include 'statistic_widget/average_scrobbles_block.html.twig' %}
 <br />
 
-<div style="height: 200px;" class="native-widget-container">
-  {% include 'my_statistics/statistic_widget/horizontalSkeletonWidget.html.twig' with {'height': 180} %}
-  <canvas style="" class="native-widget-canvas" id="ncanvas-2"></canvas>
-</div>
+{% include 'statistic_widget/max_scrobbles_block.html.twig' %}
 <br />
 
-{% include 'my_statistics/statistic_widget/average_scrobbles_block.html.twig' %}
+{% include 'statistic_widget/ScrobblesPerMonthAnnualyWidget.html.twig' %}
 <br />
 
-{% include 'my_statistics/statistic_widget/max_scrobbles_block.html.twig' %}
+{% include 'statistic_widget/TotalScrobblesPerYearWidget.html.twig' %}
 <br />

@@ -3,15 +3,15 @@
 namespace App\Entity;
 
 use App\Data\ChartOptions;
+use App\Data\Statisitc\SubTypeModel\AbstractSubTypeModel;
+use App\Data\Statisitc\SubTypeModel\BarModel;
+use App\Data\Statisitc\SubTypeModel\ScrobblesPerMonthAnnualyModel;
+use App\Data\Statisitc\SubTypeModel\TotalScrobblesPerYearModel;
+use App\Data\Statisitc\TypeModel\AbstractTypeModel;
 use App\Data\Statisitc\TypeModel\NativeTypeModel;
 use App\Data\Statisitc\TypeModel\TopAlbumsModel;
 use App\Data\Statisitc\TypeModel\TopArtistsModel;
 use App\Data\Statisitc\TypeModel\TopTracksModel;
-use App\Data\Statisitc\TypeModel\AbstractTypeModel;
-use App\Data\SubTypeModel\AbstractSubTypeModel;
-use App\Data\SubTypeModel\BarModel;
-use App\Data\SubTypeModel\ScrobblesPerMonthAnnualyModel;
-use App\Data\SubTypeModel\TotalScrobblesPerYearModel;
 use App\Repository\WidgetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -271,7 +271,7 @@ class Widget
   /**
    * Get the SubType Model (BarModel, PieModel, DonutModel) from given subTypeWidget
    * @param int $typeWidget
-   * @return AbstractSubTypeModel
+   * @return \App\Data\Statisitc\SubTypeModel\AbstractSubTypeModel
    */
   public static function getSubTypeModelFrom(int $subTypeWidget, int $typeWidget = 0): AbstractSubTypeModel
   {

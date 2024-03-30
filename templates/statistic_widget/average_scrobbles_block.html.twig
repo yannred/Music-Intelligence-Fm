@@ -8,21 +8,21 @@
 
   <div class="flex grid grid-cols-3 gap-3 self-center">
 
-    {% include 'my_statistics/statistic_widget/average_scrobbles_daily.html.twig' with {
+    {% include 'statistic_widget/average_scrobbles_daily.html.twig' with {
       'value' : 74,
       'subText': 'versus 21 (2023)',
       'progress' : '4%',
       'progressType' : 'up'
     } %}
 
-    {% include 'my_statistics/statistic_widget/average_scrobbles_weekly.html.twig' with {
+    {% include 'statistic_widget/average_scrobbles_weekly.html.twig' with {
       'value' : 451,
       'subText': 'versus 254 (2023)',
       'progress' : '12%',
       'progressType' : 'up'
     } %}
 
-    {% include 'my_statistics/statistic_widget/average_scrobbles_monthly.html.twig' with {
+    {% include 'statistic_widget/average_scrobbles_monthly.html.twig' with {
       'value' : 1559,
       'subText': 'versus 1943 (2023)',
       'progress' : '100%',

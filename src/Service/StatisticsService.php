@@ -4,10 +4,9 @@ namespace App\Service;
 
 use App\Data\ChartItem;
 use App\Data\ChartOptions;
+use App\Data\Statisitc\SubTypeModel\AbstractSubTypeModel;
 use App\Data\Statisitc\TypeModel\AbstractTypeModel;
-use App\Data\SubTypeModel\AbstractSubTypeModel;
 use App\Entity\Widget;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -361,8 +360,9 @@ class StatisticsService
   /**
    * Get the options for the chart
    * The options are represented by an array which will be converted to JSON
-   * @param Widget $widget
+   * @param ChartOptions|null $chartOptions
    * @return array
+   * @throws \Exception
    */
   public function getOptionsForChart(?ChartOptions $chartOptions = null): array
   {
