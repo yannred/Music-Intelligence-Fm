@@ -1,64 +1,70 @@
 <div class="py-2 max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-4">
 
-  <div class="flex p-1">
+  <div class="flex flex-col h-full">
 
-    {# ALBUM & LIST #}
-    <div class="inline-block flex flex-col text-white m-2 w-1/2">
+    <div class="flex p-1">
 
-      {# album title and artist name#}
-      <div class="flex-none text-center">
-        <p class="text-sm text-left font-normal text-gray-700 dark:text-gray-400">{{ subTitle }}</p>
-        <div class="card-popup-parent no-margin">
-          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white inline-block">{{ title|truncateAndSuspension(22) }}</h5>
-          <div data-popover id="popover-description" role="tooltip" class="card-popup">
-            <div class="p-3 space-y-2">
-              <h3 class="font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
-              <p>{{ subTitle }}</p>
+      {# ALBUM & LIST #}
+      <div class="inline-block flex flex-col text-white m-2 w-1/2">
+
+        {# album title and artist name#}
+        <div class="flex-none text-center">
+          <p class="mb-2 text-sm text-left font-normal text-gray-700 dark:text-gray-400">{{ subTitle }}</p>
+          <div class="card-popup-parent no-margin">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white inline-block">{{ title|truncateAndSuspension(22) }}</h5>
+            <div data-popover id="popover-description" role="tooltip" class="card-popup">
+              <div class="p-3 space-y-2">
+                <h3 class="font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
+                <p>{{ subTitle }}</p>
+              </div>
+              <div data-popper-arrow></div>
             </div>
-            <div data-popper-arrow></div>
           </div>
         </div>
+
+        {# blank space #}
+        <div class="grow"></div>
+
+        {# list #}
+        <div class="p-2 flex-none">
+          <ul class="">
+            <li class="p-1">
+              {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'} %}
+              {{ userPlaycount|number_format( 0, ',', ' ') }} scrobbles
+            </li>
+            <li class="p-1">
+              {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'}%}
+              {{ totalTrack|number_format( 0, ',', ' ') }} tracks listened
+            </li>
+          </ul>
+        </div>
+
       </div>
 
-      {# blank space #}
-      <div class="grow"></div>
-
-      {# list #}
-      <div class="p-2 flex-none">
-        <ul class="">
-          <li class="p-1">
-            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'} %}
-            {{ userPlaycount|number_format( 0, ',', ' ') }} scrobbles
-          </li>
-          <li class="p-1">
-            {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'}%}
-            {{ totalTrack|number_format( 0, ',', ' ') }} tracks listened
-          </li>
-        </ul>
+      {# IMAGE #}
+      <div class="inline-block text-white w-1/2 mt-2">
+        <a href="#" class="inline-block"><img class="p-2" src="{{ image }}" alt="{{ title }}" style="border-radius: 25px"></a>
       </div>
 
     </div>
 
-    {# IMAGE #}
-    <div class="inline-block text-white w-1/2 mt-2">
-      <a href="#" class="inline-block"><img class="p-2" src="{{ image }}" alt="{{ title }}" style="border-radius: 25px"></a>
+    <div class="my-auto"></div>
+
+    <div class="px-4">
+      <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"></p>
+      <div class="inline-block text-right w-full">
+        <a href="#"
+           class="inline-flex items-center px-3 py-2 text-sm button-main-std">
+          {{ button|truncateAndSuspension(30) }}
+          <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+          </svg>
+        </a>
+        <br />
+        &nbsp;
+      </div>
     </div>
 
-  </div>
-
-  <div class="px-4">
-    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"></p>
-    <div class="inline-block text-right w-full">
-      <a href="#"
-       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-        {{ button|truncateAndSuspension(30) }}
-        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-        </svg>
-      </a>
-      <br />
-      &nbsp;
-    </div>
   </div>
 
 </div>
