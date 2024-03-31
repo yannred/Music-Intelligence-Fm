@@ -2,10 +2,8 @@
 
 {% for track in tbody %}
 
-  {% set lovedImage = 'imgs/not-loved.png' %}
   {% set lovedClass = 'not-loved-track' %}
   {% if not track.loved_track is null %}
-    {% set lovedImage = 'imgs/loved.png' %}
     {% set lovedClass = 'loved-track' %}
   {% endif %}
 

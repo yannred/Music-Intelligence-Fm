@@ -2,11 +2,9 @@
 
 {% for scrobble in tbody %}
 
-  {% set lovedImage = 'imgs/not-loved.png' %}
   {% set lovedClass = 'not-loved-track' %}
   {% dump(scrobble) %}
   {% if scrobble.loved_track !=  0 %}
-    {% set lovedImage = 'imgs/loved.png' %}
     {% set lovedClass = 'loved-track' %}
   {% endif %}
 

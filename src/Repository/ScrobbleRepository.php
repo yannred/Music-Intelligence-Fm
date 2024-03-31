@@ -44,7 +44,7 @@ class ScrobbleRepository extends ServiceEntityRepository
       ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = scrobble.track')
       ->leftJoin('lovedTrack.track', 'track_loved')
       ->leftJoin('scrobble.track', 'track')
-      ->leftJoin('track.album', 'album')
+      ->join('track.album', 'album')
       ->leftJoin('album.image', 'image')
       ->where('scrobble.user = :user')
       ->andWhere('image.size = 1')
@@ -81,13 +81,15 @@ class ScrobbleRepository extends ServiceEntityRepository
     }
 
     $query = $this->createQueryBuilder('scrobble')
-      ->select('scrobble, track, user, lovedTrack, track_loved, track_loved.id as loved_track')
+      ->select('scrobble, track, user, lovedTrack, track_loved, track_loved.id as loved_track, image.url as image_url')
       ->join('scrobble.track', 'track')
       ->join('scrobble.user', 'user')
       ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = track.id')
       ->leftJoin('lovedTrack.track', 'track_loved')
-
+      ->join('track.album', 'album')
+      ->leftJoin('album.image', 'image')
       ->where('scrobble.user = :user')
+      ->andWhere('image.size = 1')
       ->setParameter('user', $user->getId())
       ->orderBy('scrobble.timestamp', 'ASC');
 
@@ -113,7 +115,6 @@ class ScrobbleRepository extends ServiceEntityRepository
 
     if ($albumFilter) {
       $query
-        ->join('track.album', 'album')
         ->andWhere('album.name LIKE :albumName')
         ->setParameter('albumName', '%' . trim($dataSearchBar->album) . '%');
     }
