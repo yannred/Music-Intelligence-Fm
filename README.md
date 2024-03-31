@@ -33,3 +33,27 @@ Upcoming features :
 - Anomalies report after new scrobbles import.
 - Duplicate detection and merge features.
 - Generation of playlists for Squeezebox.
+
+## Tech Stack
+
+### Languages
+
+- [PHP 8.3](https://www.php.net/)
+- [JavaScript ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [MySQL](https://www.mysql.com/)
+
+### Frameworks
+
+- [Symfony 7](https://symfony.com/)
+
+### Back-end Libraries
+
+- Symfony main bundles included with the Webapp skeleton
+- [KNP Paginator Bundle](https://github.com/KnpLabs/KnpPaginatorBundle)
+- [Symfony Messenger Bundle](https://symfony.com/doc/current/components/messenger.html)
+
+### Front-end Libraries
+
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Chart.js](https://www.chartjs.org/)
+- [Gridstack.js](https://gridstackjs.com/)
