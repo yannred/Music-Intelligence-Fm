@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Artist
 {
 
-  const LIMIT_TOP_ARTIST = 3;
+  const LIMIT_TOP_ARTIST = 6;
 
   #[ORM\Id]
   #[ORM\GeneratedValue]

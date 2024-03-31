@@ -4,16 +4,17 @@
 </div>
 
 <div>
+  <p><span class="mx-4"><a href="{{ path('app_my_albums') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top albums', 'withLink': true } %}</a></span></p>
+  <div class="flex justify-center">{% include 'my_albums/albums_mini.html.twig' %}</div>
+</div>
+
+<div>
+  <p><span class="mx-4"><a href="{{ path('app_my_artists') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top artists', 'withLink': true} %}</a></span></p>
+  <div class="flex justify-center">{% include 'my_artists/artists.html.twig' with {'mini' : true} %}</div>
+</div>
+
+<div>
   <p><span class="mx-4"><a href="{{ path('app_my_tracks') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top tracks', 'withLink': true } %}</a></span></p>
   {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': tracks, 'tbodyUrl' : myTracksTbodyUrl} %}
 </div>
 
-<div>
-  <p><span class="mx-4"><a href="{{ path('app_my_artists') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top artists', 'withLink': true } %}</a></span></p>
-  <div class="flex justify-center">{% include 'my_artists/artists.html.twig' %}</div>
-</div>
-
-<div>
-  <p><span class="mx-4"><a href="{{ path('app_my_albums') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top albums', 'withLink': true } %}</a></span></p>
-  <div class="flex justify-center">{% include 'my_albums/albums_mini.html.twig' %}</div>
-</div>
