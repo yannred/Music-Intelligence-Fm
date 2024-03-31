@@ -87,7 +87,7 @@ class TrackRepository extends ServiceEntityRepository
       ->leftJoin('user.lovedTracks', 'user_loved', 'WITH', 'user_loved.track = track.id')
       ->leftJoin('user_loved.track', 'track_loved')
       ->where('scrobble.user = :user')
-      ->andWhere('image.size = 2')
+      ->andWhere('image.size = 1')
       ->setParameter('user', $user->getId())
       ->groupBy('track.id')
       ->orderBy('count(track.id)', 'DESC')

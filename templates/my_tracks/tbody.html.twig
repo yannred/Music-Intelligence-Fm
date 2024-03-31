@@ -25,8 +25,8 @@
     {# ALBUM IMAGE  #}
     <th scope="row" class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
 
-      {% if image_url is defined %}
-        <img src='{{ image_url }}' alt='{{ track.track_name }}' class="inline-block mr-3">
+      {% if track.image_url is defined %}
+        <img src='{{ track.image_url }}' alt='{{ track.track_name }}' class="inline-block mr-3">
       {% endif %}
 
       {{ track.track_name }}
@@ -36,7 +36,7 @@
 
     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ track.album_name }}</td>
 
-    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ track.count|number_format(0, ',', ' ') }}</td>
+    <td class="px-4 py-2 font-medium text-gray-900 pl-10 whitespace-nowrap dark:text-white">{{ track.count|number_format(0, ',', ' ') }}</td>
 
   </tr>
 
