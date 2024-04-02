@@ -141,4 +141,115 @@ class ScrobbleRepository extends ServiceEntityRepository
     return $result[0]['count'];
   }
 
+
+  /**
+   * Get total scrobbles for a user this week and last week
+   * @param UserInterface $user
+   * @return array ['thisWeek' => int, 'lastWeek' => int]
+   */
+  public function getTotalScrobblesThisWeek(UserInterface $user): array
+  {
+    $mondayLastWeek = strtotime('last monday', strtotime('tomorrow', strtotime('-1 week')));
+    $sundayLastWeek = strtotime('last sunday', $mondayLastWeek);
+
+    $resultLastWeek = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :lastMonday AND :lastSunday')
+      ->setParameter('user', $user->getId())
+      ->setParameter('lastMonday', $mondayLastWeek)
+      ->setParameter('lastSunday', $sundayLastWeek)
+      ->getQuery()
+      ->getResult();
+
+    $monday = strtotime('last monday', strtotime('tomorrow'));
+    $sunday = strtotime('next sunday', $monday);
+
+    $resultThisWeek = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :monday AND :sunday')
+      ->setParameter('user', $user->getId())
+      ->setParameter('monday', $monday)
+      ->setParameter('sunday', $sunday)
+      ->getQuery()
+      ->getResult();
+
+    return ['thisWeek' => $resultThisWeek[0]['count'], 'lastWeek' => $resultLastWeek[0]['count']];
+  }
+
+
+  /**
+   * Get total scrobbles for a user this month and last month
+   * @param UserInterface $user
+   * @return array ['thisMonth' => int, 'lastMonth' => int]
+   */
+  public function getTotalScrobblesThisMonth(UserInterface $user): array
+  {
+    $firstDayLastMonth = strtotime('first day of last month');
+    $lastDayLastMonth = strtotime('last day of last month');
+
+    $resultLastMonth = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDayLastMonth)
+      ->setParameter('lastDay', $lastDayLastMonth)
+      ->getQuery()
+      ->getResult();
+
+    $firstDay = strtotime('first day of this month');
+    $lastDay = strtotime('last day of this month');
+
+    $resultThisMonth = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDay)
+      ->setParameter('lastDay', $lastDay)
+      ->getQuery()
+      ->getResult();
+
+    return ['thisMonth' => $resultThisMonth[0]['count'], 'lastMonth' => $resultLastMonth[0]['count']];
+  }
+
+
+  /**
+   * Get total scrobbles for a user this year and last year
+   * @param UserInterface $user
+   * @return array ['thisYear' => int, 'lastYear' => int]
+   */
+  public function getTotalScrobblesThisYear(UserInterface $user): array
+  {
+    $firstDayLastYear = strtotime('first day of january last year');
+    $lastDayLastYear = strtotime('last day of december last year');
+
+    $resultLastYear = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDayLastYear)
+      ->setParameter('lastDay', $lastDayLastYear)
+      ->getQuery()
+      ->getResult();
+
+    $firstDay = strtotime('first day of january');
+    $lastDay = strtotime('last day of december');
+
+    $resultThisYear = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDay)
+      ->setParameter('lastDay', $lastDay)
+      ->getQuery()
+      ->getResult();
+
+    return ['thisYear' => $resultThisYear[0]['count'], 'lastYear' => $resultLastYear[0]['count']];
+  }
+
 }
