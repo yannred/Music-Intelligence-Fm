@@ -2,7 +2,7 @@
 <div>
   <p><span class="mx-4"><a href="{{ path('app_my_scrobbles') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Last scrobbles', 'withLink': true } %}</a></span></p>
   <turbo-frame id="my_page_last_scrobbles" src="{{ path('app_myPage_last_scrobbles') }}">
-    {% include 'base/html/skeleton/lastScrobblesHomePageSkeleton.html.twig' %}
+    {% include 'base/html/skeleton/tableHomePageSkeleton.html.twig' with {'mini' : true} %}
   </turbo-frame>
 </div>
 
@@ -16,8 +16,12 @@
   <div class="flex justify-center">{% include 'my_artists/artists.html.twig' with {'mini' : true} %}</div>
 </div>
 
+
+
+{# Tracks #}
 <div>
   <p><span class="mx-4"><a href="{{ path('app_my_tracks') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top tracks', 'withLink': true } %}</a></span></p>
-  {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': tracks, 'tbodyUrl' : myTracksTbodyUrl} %}
+  <turbo-frame id="my_page_my_tracks" src="{{ path('app_myPage_my_tracks') }}">
+    {% include 'base/html/skeleton/tableHomePageSkeleton.html.twig' %}
+  </turbo-frame>
 </div>
-

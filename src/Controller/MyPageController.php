@@ -50,10 +50,6 @@ class MyPageController extends CustomAbsrtactController
     $lastFmUser['albumCount'] = $lastFmUserInfo['user']['album_count'];
     $lastFmUser['artistCount'] = $lastFmUserInfo['user']['artist_count'];
 
-    //top tracks
-    $trackRepository = $this->entityManager->getRepository(Track::class);
-    $tracks = $trackRepository->getTopTracks();
-
     //top artists
     $artistRepository = $this->entityManager->getRepository(Artist::class);
     $artists = $artistRepository->getTopArtists();
@@ -67,12 +63,9 @@ class MyPageController extends CustomAbsrtactController
       'lastFmUser' => $lastFmUser,
       'artists' => $artists,
       'albums' => $albums,
-      'tracks' => $tracks,
       'pagination' => 0,
       'userPlaycount' => 1,
-      'activeNavbarItem' => $request->get('_route'),
-      'myTracksTbodyUrl' => 'my_tracks/tbody.html.twig',
-      'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
+      'activeNavbarItem' => $request->get('_route')
     ]);
   }
 
@@ -99,6 +92,23 @@ class MyPageController extends CustomAbsrtactController
       'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date'],
       'myScrobblesTbodyUrl' => 'my_scrobbles/tbody.html.twig',
       'scrobbles' => $scrobblePagination
+    ]);
+
+  }
+
+
+  #[Route('/myPage/myTracks', name: 'app_myPage_my_tracks')]
+  public function getMyTracks(PaginatorInterface $paginator): Response
+  {
+    //top tracks
+    $trackRepository = $this->entityManager->getRepository(Track::class);
+    $tracks = $trackRepository->getTopTracks();
+
+    return $this->render('my_tracks/tracks.html.twig', [
+      'mini' => true,
+      'tracks' => $tracks,
+      'myTracksTbodyUrl' => 'my_tracks/tbody.html.twig',
+      'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
     ]);
 
   }
