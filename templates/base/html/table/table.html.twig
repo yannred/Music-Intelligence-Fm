@@ -13,9 +13,9 @@
     <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
 
       {%  if pagination == true %}
-        {% include 'base/html/table/table_header.html.twig' with {'pagination' : tbody} %}
+        {% include 'base/html/table/table_top_header.html.twig' with {'pagination' : tbody} %}
       {% else %}
-        {% include 'base/html/table/table_header.html.twig' with {}%}
+        {% include 'base/html/table/table_top_header.html.twig' with {}%}
       {% endif %}
 
       <div class="overflow-x-auto">

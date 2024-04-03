@@ -1,7 +1,7 @@
-{% if activeNavbarItem == 'app_my_page' %}
-  {% include 'base/nav_bar/nav_bar_item_selected.html.twig' with {'url' : path('app_my_page'), 'item' : 'My Page'} %}
+{% if activeNavbarItem == 'app_myPage' %}
+  {% include 'base/nav_bar/nav_bar_item_selected.html.twig' with {'url' : path('app_myPage'), 'item' : 'My Page'} %}
 {% else %}
-  {% include 'base/nav_bar/nav_bar_item.html.twig' with {'url' : path('app_my_page'), 'item' : 'My Page'} %}
+  {% include 'base/nav_bar/nav_bar_item.html.twig' with {'url' : path('app_myPage'), 'item' : 'My Page'} %}
 {% endif %}
 
 {% if activeNavbarItem == 'app_my_scrobbles' %}

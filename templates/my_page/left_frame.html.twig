@@ -1,6 +1,9 @@
+{# Last Scrobbles #}
 <div>
   <p><span class="mx-4"><a href="{{ path('app_my_scrobbles') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Last scrobbles', 'withLink': true } %}</a></span></p>
-  {% include 'my_scrobbles/my_scrobbles.html.twig' with {'thead' : myScrobblesThead, 'tbody': scrobbles, 'tbodyUrl' : myScrobblesTbodyUrl, 'mini' : true} %}
+  <turbo-frame id="my_page_last_scrobbles" src="{{ path('app_myPage_last_scrobbles') }}">
+    {% include 'base/html/skeleton/lastScrobblesHomePageSkeleton.html.twig' %}
+  </turbo-frame>
 </div>
 
 <div>

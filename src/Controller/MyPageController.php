@@ -23,7 +23,7 @@ class MyPageController extends CustomAbsrtactController
    * @return Response
    * @throws \Exception
    */
-  #[Route('/myPage', name: 'app_my_page')]
+  #[Route('/myPage', name: 'app_myPage')]
   public function index(ApiRequestService $apiRequestService, Request $request, PaginatorInterface $paginator): Response
   {
     $apiRequestService->setUser($this->getUser());
@@ -50,16 +50,6 @@ class MyPageController extends CustomAbsrtactController
     $lastFmUser['albumCount'] = $lastFmUserInfo['user']['album_count'];
     $lastFmUser['artistCount'] = $lastFmUserInfo['user']['artist_count'];
 
-
-    //Last scrobbles
-    $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
-    $query = $scrobbleRepository->paginationQuery();
-    $scrobblePagination = $paginator->paginate(
-      $query,
-      $request->query->getInt('page', 1),
-      Scrobble::LIMIT_RECENT_TRACKS
-    );
-
     //top tracks
     $trackRepository = $this->entityManager->getRepository(Track::class);
     $tracks = $trackRepository->getTopTracks();
@@ -75,15 +65,12 @@ class MyPageController extends CustomAbsrtactController
 
     return $this->render('my_page/index.html.twig', [
       'lastFmUser' => $lastFmUser,
-      'scrobbles' => $scrobblePagination,
       'artists' => $artists,
       'albums' => $albums,
       'tracks' => $tracks,
       'pagination' => 0,
       'userPlaycount' => 1,
       'activeNavbarItem' => $request->get('_route'),
-      'myScrobblesTbodyUrl' => 'my_scrobbles/tbody.html.twig',
-      'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date'],
       'myTracksTbodyUrl' => 'my_tracks/tbody.html.twig',
       'myTracksThead' => ['' , 'Title', 'Artist', 'Album', 'Scrobble']
     ]);
@@ -91,10 +78,36 @@ class MyPageController extends CustomAbsrtactController
 
 
   /**
-   * Return the Html for the compare scrobbles per period widget
+   * Return the Html for the "last scrobbles" table
+   * @param PaginatorInterface $paginator
    * @return Response
    */
-  #[Route('/myPage/compareScrobblesPerPeriod', name: 'app_compare_scrobbles_per_period')]
+  #[Route('/myPage/lastScrobbles', name: 'app_myPage_last_scrobbles')]
+  public function getLastScrobbles(PaginatorInterface $paginator): Response
+  {
+    //Last scrobbles
+    $scrobbleRepository = $this->entityManager->getRepository(Scrobble::class);
+    $query = $scrobbleRepository->paginationQuery();
+    $scrobblePagination = $paginator->paginate(
+      $query,
+      1,
+      Scrobble::LIMIT_RECENT_TRACKS
+    );
+
+    return $this->render('my_scrobbles/my_scrobbles.html.twig', [
+      'mini' => true,
+      'myScrobblesThead' => ['' , 'Title', 'Artist', 'Album', 'Date'],
+      'myScrobblesTbodyUrl' => 'my_scrobbles/tbody.html.twig',
+      'scrobbles' => $scrobblePagination
+    ]);
+
+  }
+
+  /**
+   * Return the Html for the "compare scrobbles per period" widget
+   * @return Response
+   */
+  #[Route('/myPage/compareScrobblesPerPeriod', name: 'app_myPage_compare_scrobbles_per_period')]
   public function getCompareScrobblesPerPeriodWidget(): Response
   {
 
