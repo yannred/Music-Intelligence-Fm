@@ -1,0 +1,20 @@
+{% if not height is defined %}
+  {% set height = 120 %}
+{% endif %}
+
+<div role="status" class="rounded shadow animate-pulse pt-3 px-3">
+
+  <div class="flex items-baseline" style="height: {{ height }}px;">
+    <div class="w-full bg-gray-200 rounded-t-lg h-3/4 dark:bg-gray-700"></div>
+    <div class="w-full h-2/4 ms-6 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+    <div class="w-full bg-gray-200 rounded-t-lg h-3/4 ms-6 dark:bg-gray-700"></div>
+    <div class="w-full h-2/4 ms-6 bg-gray-200 rounded-t-lg dark:bg-gray-700"></div>
+    <div class="w-full bg-gray-200 rounded-t-lg h-full ms-6 dark:bg-gray-700"></div>
+    <div class="w-full bg-gray-200 rounded-t-lg h-3/4 ms-6 dark:bg-gray-700"></div>
+    <div class="w-full bg-gray-200 rounded-t-lg h-full ms-6 dark:bg-gray-700"></div>
+    <div class="w-full bg-gray-200 rounded-t-lg h-3/4 ms-6 dark:bg-gray-700"></div>
+    <div class="w-full bg-gray-200 rounded-t-lg h-3/4 ms-6 dark:bg-gray-700"></div>
+  </div>
+  <span class="sr-only">Loading...</span>
+
+</div>

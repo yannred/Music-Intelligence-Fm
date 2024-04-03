@@ -4,7 +4,7 @@ namespace App\Data;
 
 use App\Entity\Widget;
 
-class gridstackItem
+class GridstackItem
 {
   public int $id;
   public int $x;

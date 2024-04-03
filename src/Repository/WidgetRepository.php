@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Widget;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -27,6 +28,12 @@ class WidgetRepository extends ServiceEntityRepository
     $this->security = $security;
   }
 
+  /**
+   * Create DQL query for widget
+   * @Deprecated SQL is used instead of DQL
+   * @param array $parameters
+   * @return Query
+   */
   public function createWidgetQuery(array $parameters): Query
   {
     $user = $this->security->getUser();
@@ -49,8 +56,7 @@ class WidgetRepository extends ServiceEntityRepository
     }
 
     $queryBuilder
-      ->where('scrobble.user = ' . $user->getId())
-    ;
+      ->where('scrobble.user = ' . $user->getId());
 
     if (isset($parameters['where'])) {
       foreach ($parameters['where'] as $key => $value) {
@@ -81,6 +87,12 @@ class WidgetRepository extends ServiceEntityRepository
   }
 
 
+  /**
+   * Get the widgets from the user
+   * @param int $widgetId
+   * @param int $userId
+   * @return Widget|null
+   */
   public function getWidgetFromUser(int $widgetId, int $userId): ?Widget
   {
     $query = $this->createQueryBuilder('w')
@@ -94,7 +106,65 @@ class WidgetRepository extends ServiceEntityRepository
       ->getQuery()
     ;
 
-    return $query->getResult()[0];
+    $result = $query->getResult();
+
+    return $result[0] ?? null;
+  }
+
+  /**
+   * Get the number of scrobbles per month for the current year and the previous year
+   * @param User $user
+   * @return array
+   */
+  public function getScrobblesPerMonthAnnually(User $user): array
+  {
+    $sql = '
+      SELECT
+          YEAR(FROM_UNIXTIME(scrobble.timestamp)) as "year",
+          MONTH(FROM_UNIXTIME(scrobble.timestamp)) as "month",
+          COUNT(scrobble.id) as count
+      FROM
+          scrobble
+      WHERE
+          scrobble.user_id = :userId
+          AND YEAR(FROM_UNIXTIME(scrobble.timestamp)) IN (YEAR(CURDATE()), YEAR(CURDATE()) - 1)
+      GROUP BY
+          year, month
+      ORDER BY
+          year, month;
+    ';
+
+    $query = $this->getEntityManager()->getConnection()->prepare($sql);
+    $result = $query->executeQuery(['userId' => $user->getId()]);
+
+    return $result->fetchAllAssociative();
+  }
+
+  /**
+   * @param User $user
+   * @return array[]
+   * @throws \Doctrine\DBAL\Exception
+   */
+  public function getTotalScrobblesPerYear(User $user): array
+  {
+    $sql = '
+      SELECT
+          YEAR(FROM_UNIXTIME(scrobble.timestamp)) as "year",
+          COUNT(scrobble.id) as count
+      FROM
+          scrobble
+      WHERE
+          scrobble.user_id = :userId
+      GROUP BY
+          year
+      ORDER BY
+          year;
+    ';
+
+    $query = $this->getEntityManager()->getConnection()->prepare($sql);
+    $result = $query->executeQuery(['userId' => $user->getId()]);
+
+    return $result->fetchAllAssociative();
   }
 
 }

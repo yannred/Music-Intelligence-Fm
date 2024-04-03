@@ -40,7 +40,7 @@ class MyTracksController extends CustomAbsrtactController
     );
 
     $trackTotal = $tracksPagination->getTotalItemCount();
-    $tableHeaderCaption[] = ['wording' => 'Total scrobbles :', 'data' => $trackTotal];
+    $tableHeaderCaption[] = ['wording' => 'Total tracks :', 'data' => number_format($trackTotal, 0, ',', ' ')];
 
     $response = new Response();
     if ($searchForm->isSubmitted() && $searchForm->isValid()) {

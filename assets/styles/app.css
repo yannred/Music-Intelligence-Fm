@@ -16,7 +16,7 @@
 }
 
 
-/* Inoput seclect */
+/* Input seclect */
 select option{
   @apply bg-gray-700 text-gray-300;
 }
@@ -26,12 +26,19 @@ select:checked{
 
 /* sub content frame */
 .sub-content{
-  @apply relative w-full max-w-lg h-full md:h-auto bg-gray-700 rounded-lg border border-red-900;
+  @apply relative w-full max-w-lg h-full md:h-auto bg-gray-500 rounded-lg border border-red-900;
 }
 
 /* sub content frame */
 .full-sub-content{
   @apply relative w-full h-full md:h-auto bg-gray-700 rounded-lg border border-gray-500 p-2;
+}
+
+.native-widget-container{
+  @apply block w-full max-w-md bg-white p-2 border border-gray-200 rounded-lg shadow dark:bg-gray-800;
+}
+.dark .native-widget-container{
+  @apply bg-gray-800 border-gray-700;
 }
 
 
@@ -71,7 +78,7 @@ select:checked{
   @apply bg-gray-700 ring-red-500 border-red-500;
 }
 
-
+ /* In navbar for the profil and setting button */
 .dropdown:hover .dropdown-menu {
   display: block;
 }
@@ -86,10 +93,31 @@ select:checked{
 }
 
 
-
-.no-margin{
-  margin: 0;
+/* Tabs widget */
+.active-tab-widget{
+  @apply inline-block !p-2 !text-red-600 rounded-ss-lg;
 }
+.active-tab-widget:hover{
+  @apply bg-gray-100;
+}
+.dark .active-tab-widget{
+  @apply  bg-gray-800 text-red-500;
+}
+.dark .active-tab-widget:hover{
+  @apply bg-gray-700;
+}
+
+.inactive-tab-widget{
+  @apply inline-block !p-2;
+}
+.inactive-tab-widget:hover{
+  @apply text-gray-600 bg-gray-100
+}
+.dark .inactive-tab-widget:hover{
+  @apply bg-gray-700 text-gray-300;
+}
+
+
 /*******************************/
 /****** END TAILWIND CSS  ******/
 /*******************************/
@@ -103,6 +131,11 @@ select:checked{
 /*******************************/
 /******* BASE *******/
 /*******************************/
+
+
+.no-margin{
+  margin: 0;
+}
 
 /******* Font *******/
 .bold {
@@ -121,6 +154,11 @@ select:checked{
   border: 1px rgb(75 85 99) solid !important;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
+}
+
+.txt-2xs{
+  font-size: 0.37rem; /* 6px */
+  line-height: 0.5rem; /* 8px */
 }
 
 /*******************************/

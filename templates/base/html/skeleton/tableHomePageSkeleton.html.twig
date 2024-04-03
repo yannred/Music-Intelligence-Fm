@@ -1,0 +1,52 @@
+{% if not mini is defined %}
+  {% set trHeight = 81 %}
+  {% set tdHeight = 25 %}
+  {% set lastColumnHeader = 'Scrobble' %}
+  {% set lastColumnWidth = 'Scrobble' %}
+{% else %}
+  {% set trHeight = 57 %}
+  {% set tdHeight = 15 %}
+  {% set lastColumnHeader = 'Date' %}
+{% endif %}
+
+<section class="bg-gray-50 dark:bg-gray-900 py-3 sm:py-5">
+  <div class="px-1 mx-auto max-w-screen-2xl">
+    <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+
+      {# Table Top Header #}
+      <div class="flex flex-col px-4 py-3 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
+        <div class="flex items-center space-x-4 absolute my-2"></div>
+      </div>
+      <div class="flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3 absolute right-5 top-1"></div>
+
+      {# Table #}
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3"></th>
+            <th scope="col" class="px-6 py-3">Title</th>
+            <th scope="col" class="px-6 py-3">Artist</th>
+            <th scope="col" class="px-6 py-3">Album</th>
+            <th scope="col" class="px-6 py-3">{{ lastColumnHeader }}</th>
+          </tr>
+          </thead>
+
+          <tbody>
+            <tr class="animate-pulse border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center self-center items-center" style="height: {{ trHeight }}px;"><td class="px-6 py-4"></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td></tr>
+            <tr class="animate-pulse border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center self-center items-center" style="height: {{ trHeight }}px;"><td class="px-6 py-4"></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td></tr>
+            <tr class="animate-pulse border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center self-center items-center" style="height: {{ trHeight }}px;"><td class="px-6 py-4"></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td></tr>
+            <tr class="animate-pulse border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center self-center items-center" style="height: {{ trHeight }}px;"><td class="px-6 py-4"></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td></tr>
+            <tr class="animate-pulse border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 justify-center self-center items-center" style="height: {{ trHeight }}px;"><td class="px-6 py-4"></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-full bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td><td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" style="height: {{ tdHeight }}px;"><div class="w-3/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: {{ tdHeight }}px;"></div></td></tr>
+          </tbody>
+
+        </table>
+      </div>
+
+      {# Table footer #}
+      <nav class="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation"></nav>
+
+    </div>
+  </div>
+</section>

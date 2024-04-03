@@ -2,7 +2,7 @@
 
 namespace App\Data;
 
-class chartItem
+class ChartItem
 {
   const CALLBACK_OPTION__TRUNCATE_TICKS_X = 'truncateTickX';
 

@@ -4,69 +4,78 @@
 
 {% block body %}
 
-  <div class="py-8 px-4 mx-auto w-full lg:py-16  lg:gap-16">
-  <div class="w-full w-full p-6 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-      Create your account
-    </h2>
-    <br class="my-2" />
-    {{ form_start(form) }}
+<br class="my-12">
+<div class="flex items-center w-3/4 justify-center self-center mt-10 mx-auto">
+  <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
 
-    <div class="flex justify-center">
-      <div class="sub-content p-4 mx-10">
-        <div>
-          {{ form_errors(form) }}
-        </div>
-
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.email} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.email } %}</div>
-        </div>
-
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.password} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.password, 'type' : 'password'} %}</div>
-        </div>
-
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.userName} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.userName } %}</div>
-        </div>
+      {% if app.user %}
+      <div class="mb-3">
+        You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
       </div>
 
+      {% else %}
 
-      <div class="sub-content">
+      <h5 class="text-xl font-medium text-gray-900 dark:text-white text-center mb-14">Create your account</h5>
 
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmUserName} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmUserName } %}</div>
+      {{ form_start(form) }}
+
+      <div>
+        {{ form_errors(form) }}
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+
+        <div class="px-16 py2">
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.email} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.email } %}</div>
+          </div>
+
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.password} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.password, 'type' : 'password'} %}</div>
+          </div>
+
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.userName} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.userName } %}</div>
+          </div>
         </div>
 
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmApiKey} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmApiKey } %}</div>
-        </div>
 
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmApiSessionKey} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmApiSessionKey } %}</div>
-        </div>
 
-        <div class="my-3">
-          <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lasFmApiSecret} %}</div>
-          <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lasFmApiSecret } %}</div>
+        <div class="px-16 py2">
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmUserName} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmUserName } %}</div>
+          </div>
+
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmApiKey} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmApiKey } %}</div>
+          </div>
+
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmApiSessionKey} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lastFmApiSessionKey } %}</div>
+          </div>
+
+          <div class="my-3">
+            <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lasFmApiSecret} %}</div>
+            <div class="col">{% include 'base/form/input.html.twig' with {'input': form.lasFmApiSecret } %}</div>
+          </div>
         </div>
 
       </div>
 
-    </div>
+      <div class="flex items-center justify-center mr-3 col mt-10">
+        <button type="submit" class="button-main-std ml-2 px-8">Sign up</button>
+      </div>
 
-    <div class="flex items-center justify-center mr-3 col mt-14">
-      <button type="submit" class="button-main-std ml-2">Sign up</button>
-    </div>
-
-    {{ form_end(form) }}
+      {{ form_end(form) }}
+    {% endif %}
 
   </div>
+</div>
 
 {% endblock %}

@@ -63,15 +63,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne]
     private ?Image $image = null;
 
-    #[ORM\ManyToMany(targetEntity: Track::class)]
-    private Collection $lovedTrack;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: LovedTrack::class)]
+    private Collection $lovedTracks;
 
     public function __construct()
     {
         $this->scrobbles = new ArrayCollection();
         $this->imports = new ArrayCollection();
         $this->widgetGrids = new ArrayCollection();
-        $this->lovedTrack = new ArrayCollection();
+        $this->lovedTracks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -307,25 +307,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Track>
+     * @return Collection<int, LovedTrack>
      */
-    public function getLovedTrack(): Collection
+    public function getLovedTracks(): Collection
     {
-        return $this->lovedTrack;
+        return $this->lovedTracks;
     }
 
-    public function addLovedTrack(Track $lovedTrack): static
+    public function addLovedTrack(LovedTrack $lovedTrack): static
     {
-        if (!$this->lovedTrack->contains($lovedTrack)) {
-            $this->lovedTrack->add($lovedTrack);
+        if (!$this->lovedTracks->contains($lovedTrack)) {
+            $this->lovedTracks->add($lovedTrack);
+            $lovedTrack->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeLovedTrack(Track $lovedTrack): static
+    public function removeLovedTrack(LovedTrack $lovedTrack): static
     {
-        $this->lovedTrack->removeElement($lovedTrack);
+        if ($this->lovedTracks->removeElement($lovedTrack)) {
+            // set the owning side to null (unless already changed)
+            if ($lovedTrack->getUser() === $this) {
+                $lovedTrack->setUser(null);
+            }
+        }
 
         return $this;
     }

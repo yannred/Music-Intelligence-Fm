@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Data\Widget;
+namespace App\Data\Statisitc\TypeModel;
 
 use App\Entity\Widget;
 
-class TopTracksModel extends TopModel
+class TopTracksModel extends TopTypeModel
 {
 
   public function __construct()

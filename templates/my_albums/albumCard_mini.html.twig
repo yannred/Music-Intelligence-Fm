@@ -1,0 +1,36 @@
+{% if not image is defined %}
+
+  <div class="inline-block text-white card-popup-parent">
+    <div class="w-full m-2 animate-pulse bg-gray-200 rounded-lg dark:bg-gray-700" style="width: 144px; height: 144px;"></div>
+  </div>
+
+{% else %}
+
+  {# IMAGE #}
+  <div class="inline-block text-white card-popup-parent">
+    <img class="p-2" src="{{ image }}" alt="{{ title }}" style="border-radius: 25px">
+
+    {# Pop up #}
+    <div data-popover id="popover-description" role="tooltip" class="card-popup">
+      <div class="p-3 space-y-2">
+        <h3 class="font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
+        <p>{{ subTitle }}</p>
+        {# list #}
+        <div class="p-2">
+          <ul class="">
+            <li class="p-1">
+              {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'scrobble'} %}
+              {{ userPlaycount|number_format( 0, ',', ' ') }} scrobbles
+            </li>
+            <li class="p-1">
+              {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'track'} %}
+              {{ totalTrack|number_format( 0, ',', ' ') }} tracks listened
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+{% endif %}

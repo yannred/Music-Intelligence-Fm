@@ -1,4 +1,6 @@
-{% set percentText = percent|round ~ ' %' %}
+{%  if not percentText is defined %}
+  {% set percentText = percent|round ~ ' %' %}
+{% endif %}
 {%  if percent == 100 %}
   {% set color = 'bg-success' %}
 {% endif %}

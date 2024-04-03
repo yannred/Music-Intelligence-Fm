@@ -1,0 +1,7 @@
+<div style="" class="flex flex-col native-widget-container !p-0">
+  <div class="text-gray-900 dark:text-white text-md p-2 flex flex-wrap font-extrabold text-center border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-red-600">
+    Monthly music listening trends
+  </div>
+  {% include 'statistic_widget/verticalSkeletonWidget.html.twig' with {'height': 180} %}
+  <canvas class="native-widget-canvas p-1" id="ncanvas-1" height="0"></canvas>
+</div>

@@ -1,0 +1,73 @@
+{% if not albums is defined %}
+
+  <div class="grid grid-cols-7 gap-1 w-full">
+
+      {#    {% include 'my_albums/albumCard_mini.html.twig' with {'title' : 'Punk Rocksteady', 'subTitle' : 'Mad Caddies', 'userPlaycount': '15', 'totalTrack' : '3', 'button' : 'see more'} %}#}
+
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+      {% include 'my_albums/albumCard_mini.html.twig' with {} %}
+
+  </div>
+
+{% else %}
+
+  <turbo-frame id="my_page_top_albums">
+    {% if pagination is defined and pagination == 1 %}
+      <div class="row  my-8">
+        <div class="col">
+          {{ knp_pagination_render(albums) }}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="grid grid-cols-7 gap-1">
+      {% for album in albums %}
+
+        {% set albumCount =  "" %}
+        {% if userPlaycount is defined and userPlaycount == 1 %}
+          {% set albumCount =  album.count %}
+        {% endif %}
+
+        {% set imageUrl =  "" %}
+        {% for image in album[0].image %}
+          {% if image.size == 3 %}
+            {% set imageUrl =  image.url %}
+          {% endif %}
+        {% endfor %}
+
+    {#    {% include 'my_albums/albumCard_mini.html.twig' with {'title' : 'Punk Rocksteady', 'subTitle' : 'Mad Caddies', 'userPlaycount': '15', 'totalTrack' : '3', 'button' : 'see more'} %}#}
+
+        {% include 'my_albums/albumCard_mini.html.twig' with {
+          'image': imageUrl,
+          'title': album[0].name,
+          'subTitle': album[0].artist.name,
+          'userPlaycount': albumCount,
+          'totalTrack' : album.totalTrack
+        } %}
+      {% endfor %}
+    </div>
+
+
+    {% if pagination is defined and pagination == 1 %}
+      <div class="row my-8">
+        <div class="col">
+          {{ knp_pagination_render(albums) }}
+        </div>
+      </div>
+    {% endif %}
+  </turbo-frame>
+
+{% endif %}
+

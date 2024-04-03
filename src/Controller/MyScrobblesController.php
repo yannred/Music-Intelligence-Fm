@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Data\SearchBarData;
+use App\Entity\LovedTrack;
 use App\Entity\Scrobble;
 use App\Entity\Track;
 use App\Entity\User;
@@ -45,7 +46,7 @@ class MyScrobblesController extends CustomAbsrtactController
     );
 
     $scrobbleTotal = $scrobblePagination->getTotalItemCount();
-    $tableHeaderCaption[] = ['wording' => 'Total scrobbles :', 'data' => $scrobbleTotal];
+    $tableHeaderCaption[] = ['wording' => 'Total scrobbles :', 'data' => number_format($scrobbleTotal, 0, ',', ' ')];
 
     $paramView = [
       'scrobbles' => $scrobblePagination,
@@ -83,26 +84,26 @@ class MyScrobblesController extends CustomAbsrtactController
 
     try {
 
-      $userRepository = $this->entityManager->getRepository(User::class);
-      $user = $userRepository->fullLoad($this->getUser()->getId());
-      $lovedTracks = $user->getLovedTrack();
-
-      foreach ($lovedTracks as $lovedTrack) {
-        if ($lovedTrack->getId() == $request->get('id')) {
-          $loved = true;
-        }
-      }
+      $lovedTrackRepository = $this->entityManager->getRepository(LovedTrack::class);
+      $loved = $lovedTrackRepository->isLoved($id, $this->getUser()->getId());
 
       $trackRepository = $this->entityManager->getRepository(Track::class);
       $track = $trackRepository->find($request->get('id'));
 
-      if ($loved){
-        $user->removeLovedTrack($track);
-      } else {
-        $user->addLovedTrack($track);
+      if (!$track) {
+        throw new \Exception('Track not found');
       }
 
-      $this->entityManager->persist($user);
+      if ($loved){
+        $lovedTrack = $lovedTrackRepository->findOneBy(['user' => $this->getUser(), 'track' => $track]);
+        $this->entityManager->remove($lovedTrack);
+      } else {
+        $lovedTrack = new LovedTrack();
+        $lovedTrack->setUser($this->getUser());
+        $lovedTrack->setTrack($track);
+        $this->entityManager->persist($lovedTrack);
+      }
+
       $this->entityManager->flush();
 
       $response->setStatusCode(Response::HTTP_OK);

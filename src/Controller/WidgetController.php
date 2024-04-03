@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Data\gridstackItem;
+use App\Data\GridstackItem;
 use App\Data\Notification;
 use App\Entity\Widget;
 use App\Entity\WidgetGrid;
@@ -65,8 +65,8 @@ class WidgetController extends CustomAbsrtactController
     $widgetEntities = $this->userWidgetGrid->getWidgets();
 
     foreach ($widgetEntities as $widgetEntity) {
-      $gridStackWidget = new gridstackItem($widgetEntity);
-      $modelWidget = $widgetEntity->getWidgetModel();
+      $gridStackWidget = new GridstackItem($widgetEntity);
+      $modelWidget = $widgetEntity->getTypeModel();
 
       $gridStackWidget->content = $this->statisticsService->generateContent($widgetEntity, $modelWidget->getContentParameters());
 
@@ -148,7 +148,7 @@ class WidgetController extends CustomAbsrtactController
           //All Controls OK
           $widget->setWidgetGrid($this->userWidgetGrid);
 
-          $model = $widget->getWidgetModel();
+          $model = $widget->getTypeModel();
           $widget->applyModel($model, $creating);
           if ($creating){
             $widget->setPositionX(0);

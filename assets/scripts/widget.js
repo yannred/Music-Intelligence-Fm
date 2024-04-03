@@ -188,3 +188,31 @@ function onChangeDateType(dateType){
     $('.period-custom').hide();
   }
 }
+
+
+/**
+ * Change the tab and the content of widget
+ * @param node
+ */
+function activeWidgetTab(node){
+
+  const targetId = $(node).attr('data-target');
+  const target = $('#' + targetId);
+
+  const clickedTab = $(node);
+
+  if (target.hasClass('hidden')){
+    //change content class
+    target.parent().children().addClass('hidden');
+    target.removeClass('hidden');
+
+    //change tab class
+    const oldActiveTab = $('.active-tab-widget');
+    oldActiveTab.removeClass('active-tab-widget');
+    oldActiveTab.addClass('inactive-tab-widget');
+    clickedTab.removeClass('inactive-tab-widget');
+    clickedTab.addClass('active-tab-widget');
+  }
+
+
+}

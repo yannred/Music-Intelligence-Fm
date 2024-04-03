@@ -1,7 +1,7 @@
 # ![Music Intelligence Fm logo](/assets/imgs/music-intelligence-fm.png)
 
 - French version of this README is available [here](README.fr.md).
-- Demo will be available soon [here](https://music-intelligence-fm.yann.red/).
+- Demo will be available soon [here](http://perdu.com/).
 
 ## Description
 Music Intelligence Fm is a web application using the Last.fm API and allowing to manage your scrobbles and your statistics.

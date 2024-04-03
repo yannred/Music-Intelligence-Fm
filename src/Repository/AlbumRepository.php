@@ -28,21 +28,43 @@ class AlbumRepository extends ServiceEntityRepository
     $this->security = $security;
   }
 
+  /**
+   * return an array of top albums
+   * @return array
+   */
   public function getTopAlbums(): array
   {
     $user = $this->security->getUser();
 
-    $query = $this->createQueryBuilder('album')
-      ->select('album, count(scrobble.id) as count, count(distinct track.id) as totalTrack')
+    $topResult = $this->createQueryBuilder('album')
+      ->select('album.id, count(scrobble.id) as count')
       ->join('album.tracks', 'track')
       ->join('track.scrobbles', 'scrobble')
       ->where('scrobble.user = :user')
       ->setParameter('user', $user->getId())
-      ->groupBy('album.name, album.artist')
+      ->groupBy('album.id')
       ->orderBy('count(scrobble.id)', 'DESC')
-      ->getQuery();
+      ->setMaxResults(Album::LIMIT_TOP_ALBUMS)
+      ->getQuery()
+      ->getResult();
 
-    return $query->getResult();
+    $albums = [];
+    foreach ($topResult as $result) {
+      $album = $this->createQueryBuilder('album')
+        ->select('album, count(scrobble.id) as count, count(distinct track.id) as totalTrack')
+        ->join('album.tracks', 'track')
+        ->join('track.scrobbles', 'scrobble')
+        ->where('scrobble.user = :user')
+        ->andWhere('album.id = :albumId')
+        ->setParameter('user', $user->getId())
+        ->setParameter('albumId', $result['id'])
+        ->getQuery()
+        ->getOneOrNullResult();
+
+      $albums[] = $album;
+    }
+
+    return $albums;
   }
 
   public function paginationFilteredQuery(SearchBarData $dataSearchBar): Query

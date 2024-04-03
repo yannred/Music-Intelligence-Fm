@@ -1,0 +1,107 @@
+{% if not week is defined %}
+
+  <turbo-frame id="compare_scrobbles_per_period" src="{{ path('app_myPage_compare_scrobbles_per_period') }}">
+    <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      {# Tabs Title #}
+      <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800 dark:text-red-600" id="tab-widget-compare">
+        <li class="me-2">
+          <button data-target="contentTab-widget-compare-week" type="button" class="active-tab-widget">
+            This Week
+          </button>
+        </li>
+        <li class="me-2">
+          <button data-target="contentTab-widget-compare-month" type="button" class="inactive-tab-widget">
+            This Month
+          </button>
+        </li>
+        <li class="me-2">
+          <button data-target="contentTab-widget-compare-year" type="button" class="inactive-tab-widget">
+            This Year
+          </button>
+        </li>
+      </ul>
+      {# Content #}
+      <div id="defaultTabContent" class="flex" style="height: 163px;">
+        <div class="flex flex-col p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800 w-full" id="contentTab-widget-compare-week" >
+          <h2 class="mb-3 mt-2 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+            Total Scrobbles This Week
+          </h2>
+          <div class="my-auto"></div>
+          <div role="status" class="max-w-sm animate-pulse pt-3 px-3">
+            <div class="h-6 bg-gray-200 rounded-r-lg dark:bg-gray-700 w-48 mb-4"></div>
+            <div class="h-6 bg-gray-200 rounded-r-lg dark:bg-gray-700 max-w-[330px] mb-4"></div>
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </turbo-frame>
+
+{% else %}
+
+<turbo-frame id="compare_scrobbles_per_period">
+
+  <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
+    {# Tabs Title #}
+    <ul class="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800 dark:text-red-600" id="tab-widget-compare">
+      <li class="me-2">
+        <button data-target="contentTab-widget-compare-week" type="button" class="active-tab-widget" onclick="activeWidgetTab(this)">
+          This Week
+        </button>
+      </li>
+      <li class="me-2">
+        <button data-target="contentTab-widget-compare-month" type="button" class="inactive-tab-widget" onclick="activeWidgetTab(this)">
+          This Month
+        </button>
+      </li>
+      <li class="me-2">
+        <button data-target="contentTab-widget-compare-year" type="button" class="inactive-tab-widget" onclick="activeWidgetTab(this)">
+          This Year
+        </button>
+      </li>
+    </ul>
+
+
+    {# Content #}
+    <div id="defaultTabContent" class="flex" style="height: 163px;">
+
+      <div class="flex flex-col p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800 w-full" id="contentTab-widget-compare-week" >
+        <h2 class="mb-3 mt-2 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+          Total Scrobbles This Week
+        </h2>
+        <div class="my-auto"></div>
+        <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          {% include 'base/html/progress.html.twig' with {'percent': week.thisWeek.percent, 'label' :  week.thisWeek.value ~ ' scrobbles', 'percentText' : ''} %}
+          {% include 'base/html/progress.html.twig' with {'percent': week.lastWeek.percent, 'label' : week.lastWeek.value ~ ' scrobbles last week', 'percentText' : ''} %}
+        </div>
+      </div>
+
+      <div class="flex flex-col p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800 w-full hidden" id="contentTab-widget-compare-month" >
+        <h2 class="mb-3 mt-2 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+          Total Scrobbles This Month
+        </h2>
+        <div class="my-auto"></div>
+        <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          {% include 'base/html/progress.html.twig' with {'percent': month.thisMonth.percent, 'label' :  month.thisMonth.value ~ ' scrobbles', 'percentText' : ''} %}
+          {% include 'base/html/progress.html.twig' with {'percent': month.lastMonth.percent, 'label' : month.lastMonth.value ~ ' scrobbles last month', 'percentText' : ''} %}
+        </div>
+      </div>
+
+      <div class="flex flex-col p-2 bg-white rounded-lg md:p-2 dark:bg-gray-800 w-full hidden" id="contentTab-widget-compare-year">
+      <h2 class="mb-3 mt-2 text-md font-extrabold tracking-tight text-gray-900 dark:text-white">
+          Total Scrobbles This Year
+        </h2>
+        <div class="my-auto"></div>
+        <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          {% include 'base/html/progress.html.twig' with {'percent': year.thisYear.percent, 'label' :  year.thisYear.value ~ ' scrobbles', 'percentText' : ''} %}
+          {% include 'base/html/progress.html.twig' with {'percent': year.lastYear.percent, 'label' : year.lastYear.value ~ ' scrobbles last year', 'percentText' : ''} %}
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</turbo-frame>
+
+{% endif %}

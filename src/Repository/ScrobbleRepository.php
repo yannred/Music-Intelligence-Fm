@@ -30,17 +30,34 @@ class ScrobbleRepository extends ServiceEntityRepository
   }
 
 
+  /**
+   * Get query for pagination
+   * @return Query
+   */
   public function paginationQuery(): Query
   {
     $user = $this->security->getUser();
 
-    return $this->createQueryBuilder('s')
-      ->where('s.user = :user')
+    return $this->createQueryBuilder('scrobble')
+      ->select('scrobble, track, album, user, image, lovedTrack, track_loved, track_loved.id as loved_track, image.url as image_url')
+      ->leftJoin('scrobble.user', 'user')
+      ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = scrobble.track')
+      ->leftJoin('lovedTrack.track', 'track_loved')
+      ->leftJoin('scrobble.track', 'track')
+      ->join('track.album', 'album')
+      ->leftJoin('album.image', 'image')
+      ->where('scrobble.user = :user')
+      ->andWhere('image.size = 1')
       ->setParameter('user', $user->getId())
-      ->orderBy('s.timestamp', 'DESC')
+      ->orderBy('scrobble.timestamp', 'DESC')
       ->getQuery();
   }
 
+  /**
+   * Get query for pagination with filters
+   * @param SearchBarData $dataSearchBar
+   * @return Query
+   */
   public function paginationFilteredQuery(SearchBarData $dataSearchBar): Query
   {
     $user = $this->security->getUser();
@@ -63,49 +80,52 @@ class ScrobbleRepository extends ServiceEntityRepository
       $albumFilter = true;
     }
 
-    $query = $this->createQueryBuilder('s')
-      ->select('s, t, u , lt')
-      ->join('s.track', 't')
-      ->join('s.user', 'u')
-      ->leftJoin('u.lovedTrack', 'lt', 'WITH', 'lt.id = t.id')
-      ->where('s.user = :user')
+    $query = $this->createQueryBuilder('scrobble')
+      ->select('scrobble, track, user, lovedTrack, track_loved, track_loved.id as loved_track, image.url as image_url')
+      ->join('scrobble.track', 'track')
+      ->join('scrobble.user', 'user')
+      ->leftJoin('user.lovedTracks', 'lovedTrack', 'WITH', 'lovedTrack.track = track.id')
+      ->leftJoin('lovedTrack.track', 'track_loved')
+      ->join('track.album', 'album')
+      ->leftJoin('album.image', 'image')
+      ->where('scrobble.user = :user')
+      ->andWhere('image.size = 1')
       ->setParameter('user', $user->getId())
-      ->orderBy('s.timestamp', 'ASC');
+      ->orderBy('scrobble.timestamp', 'ASC');
 
     if ($dateFilter) {
       $query
-        ->andWhere('s.timestamp BETWEEN :from AND :to')
+        ->andWhere('scrobble.timestamp BETWEEN :from AND :to')
         ->setParameter('from', $dataSearchBar->from->getTimestamp())
         ->setParameter('to', $dataSearchBar->to->getTimestamp());
     }
 
     if ($trackFilter) {
       $query
-        ->andWhere('t.name LIKE :trackName')
+        ->andWhere('track.name LIKE :trackName')
         ->setParameter('trackName', '%' . trim($dataSearchBar->track) . '%');
     }
 
     if ($artistFilter) {
       $query
-        ->join('t.artist', 'artist')
+        ->join('track.artist', 'artist')
         ->andWhere('artist.name LIKE :artistName')
         ->setParameter('artistName', '%' . trim($dataSearchBar->artist) . '%');
     }
 
     if ($albumFilter) {
       $query
-        ->join('t.album', 'album')
         ->andWhere('album.name LIKE :albumName')
         ->setParameter('albumName', '%' . trim($dataSearchBar->album) . '%');
     }
 
-    $query->orderBy('s.timestamp', 'DESC');
+    $query->orderBy('scrobble.timestamp', 'DESC');
 
     return $query->getQuery();
   }
 
   /**
-   * Get total scrobble imported for a user
+   * Get total scrobbles imported for a user
    * @param UserInterface $user
    * @return mixed
    */
@@ -119,6 +139,117 @@ class ScrobbleRepository extends ServiceEntityRepository
       ->getResult();
 
     return $result[0]['count'];
+  }
+
+
+  /**
+   * Get total scrobbles for a user this week and last week
+   * @param UserInterface $user
+   * @return array ['thisWeek' => int, 'lastWeek' => int]
+   */
+  public function getTotalScrobblesThisWeek(UserInterface $user): array
+  {
+    $mondayLastWeek = strtotime('last monday', strtotime('tomorrow', strtotime('-1 week')));
+    $sundayLastWeek = strtotime('last sunday', $mondayLastWeek);
+
+    $resultLastWeek = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :lastMonday AND :lastSunday')
+      ->setParameter('user', $user->getId())
+      ->setParameter('lastMonday', $mondayLastWeek)
+      ->setParameter('lastSunday', $sundayLastWeek)
+      ->getQuery()
+      ->getResult();
+
+    $monday = strtotime('last monday', strtotime('tomorrow'));
+    $sunday = strtotime('next sunday', $monday);
+
+    $resultThisWeek = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :monday AND :sunday')
+      ->setParameter('user', $user->getId())
+      ->setParameter('monday', $monday)
+      ->setParameter('sunday', $sunday)
+      ->getQuery()
+      ->getResult();
+
+    return ['thisWeek' => $resultThisWeek[0]['count'], 'lastWeek' => $resultLastWeek[0]['count']];
+  }
+
+
+  /**
+   * Get total scrobbles for a user this month and last month
+   * @param UserInterface $user
+   * @return array ['thisMonth' => int, 'lastMonth' => int]
+   */
+  public function getTotalScrobblesThisMonth(UserInterface $user): array
+  {
+    $firstDayLastMonth = strtotime('first day of last month');
+    $lastDayLastMonth = strtotime('last day of last month');
+
+    $resultLastMonth = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDayLastMonth)
+      ->setParameter('lastDay', $lastDayLastMonth)
+      ->getQuery()
+      ->getResult();
+
+    $firstDay = strtotime('first day of this month');
+    $lastDay = strtotime('last day of this month');
+
+    $resultThisMonth = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDay)
+      ->setParameter('lastDay', $lastDay)
+      ->getQuery()
+      ->getResult();
+
+    return ['thisMonth' => $resultThisMonth[0]['count'], 'lastMonth' => $resultLastMonth[0]['count']];
+  }
+
+
+  /**
+   * Get total scrobbles for a user this year and last year
+   * @param UserInterface $user
+   * @return array ['thisYear' => int, 'lastYear' => int]
+   */
+  public function getTotalScrobblesThisYear(UserInterface $user): array
+  {
+    $firstDayLastYear = strtotime('first day of january last year');
+    $lastDayLastYear = strtotime('last day of december last year');
+
+    $resultLastYear = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDayLastYear)
+      ->setParameter('lastDay', $lastDayLastYear)
+      ->getQuery()
+      ->getResult();
+
+    $firstDay = strtotime('first day of january');
+    $lastDay = strtotime('last day of december');
+
+    $resultThisYear = $this->createQueryBuilder('scrobble')
+      ->select('count(scrobble.id) as count')
+      ->where('scrobble.user = :user')
+      ->andWhere('scrobble.timestamp BETWEEN :firstDay AND :lastDay')
+      ->setParameter('user', $user->getId())
+      ->setParameter('firstDay', $firstDay)
+      ->setParameter('lastDay', $lastDay)
+      ->getQuery()
+      ->getResult();
+
+    return ['thisYear' => $resultThisYear[0]['count'], 'lastYear' => $resultLastYear[0]['count']];
   }
 
 }

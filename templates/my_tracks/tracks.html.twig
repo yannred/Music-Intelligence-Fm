@@ -1,16 +1,18 @@
-<div>
+<turbo-frame id="my_page_top_tracks">
+  <div>
 
-  {% if pagination is defined and pagination == 1 %}
-    {% set pagination = true %}
-  {% else %}
-    {% set pagination = false %}
-  {% endif %}
+    {% if pagination is defined and pagination == 1 %}
+      {% set pagination = true %}
+    {% else %}
+      {% set pagination = false %}
+    {% endif %}
 
-  {% include 'base/html/table/table.html.twig' with {
-    'thead' : myTracksThead,
-    'tbody': tracks,
-    'tbodyUrl' : myTracksTbodyUrl,
-    'pagination' : pagination,
-  } %}
+    {% include 'base/html/table/table.html.twig' with {
+      'thead' : myTracksThead,
+      'tbody': tracks,
+      'tbodyUrl' : myTracksTbodyUrl,
+      'pagination' : pagination,
+    } %}
 
-</div>
+  </div>
+</turbo-frame>

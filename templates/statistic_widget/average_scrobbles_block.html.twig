@@ -1,0 +1,36 @@
+<div style="height: 200px; width: 373px;" class="flex flex-col native-widget-container !p-0">
+
+  <div class="text-gray-900 dark:text-white text-md p-2 flex flex-wrap font-extrabold text-center border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-red-600">
+    Average scrobbles
+  </div>
+
+  <div class="my-auto"></div>
+
+  <div class="flex grid grid-cols-3 gap-3 self-center">
+
+    {% include 'statistic_widget/average_scrobbles_daily.html.twig' with {
+      'value' : 74,
+      'subText': 'versus 21 (2023)',
+      'progress' : '4%',
+      'progressType' : 'up'
+    } %}
+
+    {% include 'statistic_widget/average_scrobbles_weekly.html.twig' with {
+      'value' : 451,
+      'subText': 'versus 254 (2023)',
+      'progress' : '12%',
+      'progressType' : 'up'
+    } %}
+
+    {% include 'statistic_widget/average_scrobbles_monthly.html.twig' with {
+      'value' : 1559,
+      'subText': 'versus 1943 (2023)',
+      'progress' : '100%',
+      'progressType' : 'down'
+    } %}
+
+  </div>
+
+  <div class="my-auto"></div>
+
+</div>

@@ -3,33 +3,23 @@
 {% block title %} - My Page{% endblock %}
 
 {% block body %}
+
   {% include 'base/html/page-title.html.twig' with {'title': 'Your Page'} %}
   <hr class="mb-8" />
 
-  <div>
-    {% include 'my_page/user_card.html.twig' %}
+
+  <div class="grid grid-cols-4 gap-4">
+    <div class="col-span-3">
+      {% include 'my_page/left_frame.html.twig' %}
+    </div>
+
+    <div class="py-12">
+      {% include 'my_page/right_frame.html.twig' %}
+    </div>
   </div>
 
-  <div>
-    <p><span class="mx-4"><a href="{{ path('app_my_scrobbles') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Last scrobbles', 'withLink': true } %}</a></span></p>
-    {% include 'my_scrobbles/my_scrobbles.html.twig' with {'thead' : myScrobblesThead, 'tbody': scrobbles, 'tbodyUrl' : myScrobblesTbodyUrl} %}
-  </div>
-
-  <div>
-    <p><span class="mx-4"><a href="{{ path('app_my_tracks') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top tracks', 'withLink': true } %}</a></span></p>
-    {% include 'my_tracks/tracks.html.twig' with {'thead' : myTracksThead, 'tbody': scrobbles, 'tbodyUrl' : myTracksTbodyUrl} %}
-  </div>
-
-  <div>
-    <p><span class="mx-4"><a href="{{ path('app_my_artists') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top artists', 'withLink': true } %}</a></span></p>
-    <div class="flex justify-center">{% include 'my_artists/artists.html.twig' %}</div>
-  </div>
-
-  <div>
-    <p><span class="mx-4"><a href="{{ path('app_my_albums') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top albums', 'withLink': true } %}</a></span></p>
-    <div class="flex justify-center">{% include 'my_albums/albums.html.twig' %}</div>
-  </div>
-
-
+  <script>
+    loadCharts(true);
+  </script>
 
 {% endblock %}

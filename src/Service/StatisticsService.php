@@ -2,22 +2,74 @@
 
 namespace App\Service;
 
-use App\Data\chartItem;
+use App\Data\ChartItem;
+use App\Data\ChartOptions;
+use App\Data\Statisitc\SubTypeModel\AbstractSubTypeModel;
+use App\Data\Statisitc\TypeModel\AbstractTypeModel;
 use App\Entity\Widget;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+
+//TODO : create two children classes, one for user statistics and one for native statistics
 
 class StatisticsService
 {
 
   private EntityManagerInterface $em;
+  private Security $security;
 
-  public function __construct(EntityManagerInterface $em)
+  private ?AbstractTypeModel $typeModel;
+  private ?AbstractSubTypeModel $subTypeModel;
+  private ChartItem $chartItem;
+  private ?Widget $widget;
+
+  public function __construct(EntityManagerInterface $em, Security $security)
   {
     $this->em = $em;
+    $this->security = $security;
+
+    $this->typeModel = null;
+    $this->subTypeModel = null;
+    $this->chartItem = new ChartItem();
+    $this->widget = null;
+  }
+
+  /**
+   * Set the widget used for the service
+   * Must be used before other methods
+   * @param Widget $widget
+   * @return void
+   */
+  public function setWidget(Widget $widget): void
+  {
+    $this->widget = $widget;
+  }
+
+  /**
+   * Set the models attributes (typeModel and subTypeModel) by using the widgetType and widgetSubType
+   * Necessary for use other methods of the service
+   * @return void
+   * @throws \Exception
+   */
+  public function setModels(){
+
+    if ($this->widget === null){
+      throw new \Exception('The widget attribute of StatisticsService is null, use setWidget() method before');
+    }
+
+    $this->typeModel = $this->widget->getTypeModel();
+    $this->subTypeModel = $this->widget->getSubTypeModel();
+
+    if ($this->typeModel === null || $this->subTypeModel === null){
+      throw new \Exception('TypeModel or subTypeModel can\'t be found for the widget');
+    }
   }
 
   public function generateContent(?Widget $widget, array $parameters): string
   {
+
+    //TODO : use model for get the content (even if it's always the same for now)
+
     $content = '';
 
     switch ($widget->getSubTypeWidget()) {
@@ -54,8 +106,18 @@ class StatisticsService
   }
 
 
-  public function getDataAttributeForChart(Widget $widget): array
+  /**
+   * Return the data attribute of the JSON chart definition
+   * @param Widget $widget
+   * @return array[]
+   * @throws \Exception
+   */
+  public function getDataAttributeForChart(): array
   {
+    if ($this->widget === null){
+      throw new \Exception('The widget attribute of StatisticsService is null, use setWidget() method before');
+    }
+
     //the returned value
     $dataAttribute = [
       'labels' => [], //labels of the chart
@@ -83,187 +145,272 @@ class StatisticsService
     ];
 
     $dataSets = [
-      'label' => $widget->getWording(), // Title of the chart
+      'label' => $this->widget->getWording(), // Title of the chart
       'data' => [], // Data of the chart
       'backgroundColor' => $backgroundColor,
       'borderColor' => $borderColor,
       'borderWidth' => 5
     ];
 
-    switch ($widget->getSubTypeWidget()) {
+    //For native widget, we need to call a specific function
+    if ($this->widget->getTypeWidget() == Widget::TYPE__NATIVE){
 
-      case Widget::SUB_TYPE__BAR :
+      $dataAttribute = $this->getDataSetsForNativeWidget();
 
-        $query = $widget->getQuery();
-        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+    } else {
 
-        if (count($allResults) > 0) {
-          $total = 0;
-          foreach ($allResults as $result) {
-            $total += $result['count'];
+      switch ($this->widget->getSubTypeWidget()) {
+
+        case Widget::SUB_TYPE__BAR :
+
+          $query = $this->widget->getQuery();
+          $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+
+          if (count($allResults) > 0) {
+            $total = 0;
+            foreach ($allResults as $result) {
+              $total += $result['count'];
+            }
+            $total = ['name' => 'All', 'count' => $total];
+
+            $firstResults = array_slice($allResults, 0, 5);
+            $results = array_merge([$total], $firstResults);
+
+            $labels = [];
+            $datas = [];
+            foreach ($results as $result) {
+              $labels[] = $result['name'];
+              $datas[] = $result['count'];
+            }
+            $dataAttribute['labels'] = $labels;
+            $dataSets['data'] = $datas;
           }
-          $total = ['name' => 'All', 'count' => $total];
+          break;
 
-          $firstResults = array_slice($allResults, 0, 5);
-          $results = array_merge([$total], $firstResults);
+        case Widget::SUB_TYPE__PIE :
+        case Widget::SUB_TYPE__DONUT :
+          break;
 
-          $labels = [];
-          $datas = [];
-          foreach ($results as $result) {
-            $labels[] = $result['name'];
-            $datas[] = $result['count'];
-          }
-          $dataAttribute['labels'] = $labels;
-          $dataSets['data'] = $datas;
-        }
-        break;
+      }
+      //END SWITCH
 
-      case Widget::SUB_TYPE__PIE :
-      case Widget::SUB_TYPE__DONUT :
-        break;
+      $dataAttribute['datasets'][] = $dataSets;
     }
 
-    $dataAttribute['datasets'][] = $dataSets;
+    $this->chartItem->dataAttribute = $dataAttribute;
+    return $dataAttribute;
+  }
 
+  /**
+   * Return the data attribute of the JSON chart definition for native widget
+   * @return array
+   * @throws \Exception
+   */
+  private function getDataSetsForNativeWidget(): array
+  {
+    if ($this->widget === null){
+      throw new \Exception('The widget attribute of StatisticsService is null, use setWidget() method before');
+    }
+
+    $dataAttribute = [];
+    $user = $this->security->getUser();
+
+    switch ($this->widget->getSubTypeWidget()) {
+
+      case Widget::SUB_TYPE_NATIVE__SCROBBLES_PER_MONTH_ANNUALY :
+
+        $widgetRepository = $this->em->getRepository(Widget::class);
+        $results = $widgetRepository->getScrobblesPerMonthAnnually($user);
+        $allResults = [];
+        foreach ($results as $result) {
+          $allResults[$result['year']][$result['month']] = $result['count'];
+        }
+
+        $curentYear = date('Y');
+        $lastYear = date('Y') - 1;
+
+        $dataAttribute['labels'] = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
+        $datas = [];
+        for ($year = $lastYear; $year <= $curentYear; $year++) {
+          for ($month = 1; $month <= 12; $month++) {
+            if (isset($allResults[$year][$month])) {
+              $datas[$year][] = $allResults[$year][$month];
+            } else {
+              $datas[$year][] = 0;
+            }
+          }
+        }
+
+        $firstDataSets['data'] = $datas[$curentYear];
+        $firstDataSets['label'] = $curentYear;
+        $secondDataSets['data'] = $datas[$lastYear];
+        $secondDataSets['label'] = $lastYear;
+        $dataAttribute['datasets'][] = $firstDataSets;
+        $dataAttribute['datasets'][] = $secondDataSets;
+
+        break;
+
+
+        case Widget::SUB_TYPE_NATIVE__TOTAL_SCROBBLES_PER_YEAR :
+
+          $dataSets = [];
+
+          $widgetRepository = $this->em->getRepository(Widget::class);
+          $resultCollection = $widgetRepository->getTotalScrobblesPerYear($user);
+
+          if (count($resultCollection) > 0) {
+            $results = [];
+            $labels = [];
+
+            foreach ($resultCollection as $result) {
+              $results[$result['year']] = $result['count'];
+            }
+
+            //constitue un tableau pour les 5 dernieres du nombre de scrobble total
+            for ($year = date('Y'); $year != (date('Y') - 5); $year--) {
+              $labels[] = $year;
+              if (isset($results[$year])) {
+                $dataSets[] = $results[$year];
+              } else {
+                $dataSets[] = 0;
+              }
+            }
+            $dataAttribute['labels'] = $labels;
+          }
+
+          $dataAttribute['datasets'][]['data'] = $dataSets;
+          break;
+
+    }
+
+    $this->chartItem->dataAttribute = $dataAttribute;
     return $dataAttribute;
   }
 
 
-  public function getDataForChart(Widget $widget): array
-  {
-    $data = [];
-
-    switch ($widget->getSubTypeWidget()) {
-
-      case Widget::SUB_TYPE__BAR :
-
-        $query = $widget->getQuery();
-        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
-
-        if (count($allResults) > 0) {
-          $total = 0;
-          foreach ($allResults as $result) {
-            $total += $result['count'];
-          }
-          $total = ['name' => 'All', 'count' => $total];
-
-          $firstResults = array_slice($allResults, 0, 5);
-
-          $results = array_merge([$total], $firstResults);
-
-          foreach ($results as $result) {
-            $data[] = [
-              'label' => $result['name'],
-              'data' => $result['count']
-            ];
-          }
-        }
-        break;
-
-      case Widget::SUB_TYPE__PIE :
-      case Widget::SUB_TYPE__DONUT :
-
-        $query = $widget->getQuery();
-        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
-
-        if (count($allResults) > 0) {
-          $firstResults = array_slice($allResults, 0, 5);
-
-          $total = 0;
-          foreach ($allResults as $result) {
-            $total += $result['count'];
-          }
-
-          $totalFirstResults = 0;
-          foreach ($firstResults as $result) {
-            $totalFirstResults += $result['count'];
-          }
-          $others = ['name' => 'Others', 'count' => $total - $totalFirstResults];
-
-          $results = array_merge([$others], $firstResults);
-
-          foreach ($results as $result) {
-            $data[] = [
-              'label' => $result['name'],
-              'data' => $result['count']
-            ];
-          }
-        }
-
-        break;
-    }
-
-    // dump($data);
-    return $data;
-  }
+//  public function getDataForChart(Widget $widget): array
+//  {
+//    $data = [];
+//
+//    switch ($widget->getSubTypeWidget()) {
+//
+//      case Widget::SUB_TYPE__BAR :
+//
+//        $query = $widget->getQuery();
+//        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+//
+//        if (count($allResults) > 0) {
+//          $total = 0;
+//          foreach ($allResults as $result) {
+//            $total += $result['count'];
+//          }
+//          $total = ['name' => 'All', 'count' => $total];
+//
+//          $firstResults = array_slice($allResults, 0, 5);
+//
+//          $results = array_merge([$total], $firstResults);
+//
+//          foreach ($results as $result) {
+//            $data[] = [
+//              'label' => $result['name'],
+//              'data' => $result['count']
+//            ];
+//          }
+//        }
+//        break;
+//
+//      case Widget::SUB_TYPE__PIE :
+//      case Widget::SUB_TYPE__DONUT :
+//
+//        $query = $widget->getQuery();
+//        $allResults = $this->em->getConnection()->executeQuery($query)->fetchAllAssociative();
+//
+//        if (count($allResults) > 0) {
+//          $firstResults = array_slice($allResults, 0, 5);
+//
+//          $total = 0;
+//          foreach ($allResults as $result) {
+//            $total += $result['count'];
+//          }
+//
+//          $totalFirstResults = 0;
+//          foreach ($firstResults as $result) {
+//            $totalFirstResults += $result['count'];
+//          }
+//          $others = ['name' => 'Others', 'count' => $total - $totalFirstResults];
+//
+//          $results = array_merge([$others], $firstResults);
+//
+//          foreach ($results as $result) {
+//            $data[] = [
+//              'label' => $result['name'],
+//              'data' => $result['count']
+//            ];
+//          }
+//        }
+//
+//        break;
+//    }
+//
+//    // dump($data);
+//    return $data;
+//  }
 
 
   /**
    * Get the options for the chart
    * The options are represented by an array which will be converted to JSON
-   * @param Widget $widget
+   * @param ChartOptions|null $chartOptions
    * @return array
+   * @throws \Exception
    */
-  public function getOptionsForChart(Widget $widget): array
+  public function getOptionsForChart(?ChartOptions $chartOptions = null): array
   {
-    $options = [];
+    //if chartOptions is null, we use the subTypeModel of the widget for get it
+    if ($chartOptions === null){
+      if ($this->subTypeModel === null){
+        throw new \Exception('The subTypeModel attribute of StatisticsService is null, use setModels() method before');
+      }
+      $chartOptions = $this->subTypeModel->getChartOptions();
+    }
 
-    switch ($widget->getSubTypeWidget()) {
-
-      case Widget::SUB_TYPE__BAR :
-
-        $options = [
-          'aspectRatio' => 1,
-          'scales' => [
-            'x' => [
-              //Tick is the label of the axis, not of the legend
-              //https://www.chartjs.org/docs/latest/axes/_common_ticks.html
-              'ticks' => [
-                'font' => [
-                  'size' => 14
-                ]
-              ],
-              'grid' => [
-                'display' => false
-              ]
+    $options = [
+      'aspectRatio' => $chartOptions->aspectRatio,
+      'scales' => [
+        'x' => [
+          //Tick is the label of the axis, not of the legend
+          //https://www.chartjs.org/docs/latest/axes/_common_ticks.html
+          'ticks' => [
+            'font' => [
+              'size' => $chartOptions->ticksFontSizeX
             ],
-            'y' => [
-              //max value of the axis
-              'max' => 200,
-              'grid' => [
-                'display' => false
-              ]
-            ]
+            'display' => $chartOptions->ticksVisibleX
           ],
-          'plugins' => [
-            //Legend is the element outside the chart
-            'legend' => [
-              'display' => false
-            ]
+          'grid' => [
+            'display' => false
           ]
-        ];
-
-        break;
-
-      case Widget::SUB_TYPE__PIE :
-      case Widget::SUB_TYPE__DONUT :
-
-      $options = [
-        'aspectRatio' => 1,
-        'scales' => [
-          'x' => [],
-          'y' => []
         ],
-        'plugins' => [
-          //Legend is the element outside the chart
-          'legend' => [
-            'display' => true
+        'y' => [
+          'ticks' => [
+            'font' => [
+              'size' => $chartOptions->ticksFontSizeY
+            ],
+            'display' => $chartOptions->ticksVisibleY
+          ],
+          'max' => $this->getMaxAxisValue(),//max value of the axis
+          'grid' => [
+            'display' => false
           ]
         ]
-      ];
-
-        break;
-    }
+      ],
+      'plugins' => [
+        //Legend is the element outside the chart
+        'legend' => [
+          'display' => $chartOptions->legendVisible
+        ]
+      ],
+      'indexAxis' => $chartOptions->indexAxis
+    ];
 
     // dump($options);
     return $options;
@@ -273,19 +420,22 @@ class StatisticsService
   /**
    * Get the callback options for the chart
    * The callbacks are represented by constants in the chartItem class
-   * @param Widget $widget
    * @return array
+   * @throws \Exception
    */
-  public function getCallbackOptionsForChart(Widget $widget): array
+  public function getCallbackOptionsForChart(): array
   {
+    if ($this->widget === null){
+      throw new \Exception('The widget attribute of StatisticsService is null, use setWidget() method before');
+    }
 
     $callbackOptions = [];
 
-    switch ($widget->getSubTypeWidget()) {
+    switch ($this->widget->getSubTypeWidget()) {
 
       case Widget::SUB_TYPE__BAR :
 
-        $callbackOptions[] = chartItem::CALLBACK_OPTION__TRUNCATE_TICKS_X;
+        $callbackOptions[] = ChartItem::CALLBACK_OPTION__TRUNCATE_TICKS_X;
         break;
 
       case Widget::SUB_TYPE__PIE :
@@ -323,6 +473,59 @@ class StatisticsService
     }
 
     return $query;
+  }
+
+  /**
+   * Get the max value of the axis
+   * (For Top Type widget, we keep the second max value)
+   * @return int
+   */
+  private function getMaxAxisValue(): int
+  {
+    $max = 0;
+    $secondMax = 0;
+
+    If (
+      //For this type we keep the second max value
+      $this->widget->getTypeWidget() == Widget::TYPE__TOP_ARTISTS
+      OR $this->widget->getTypeWidget() == Widget::TYPE__TOP_ALBUMS
+      OR $this->widget->getTypeWidget() == Widget::TYPE__TOP_TRACKS
+    ){
+      foreach ($this->chartItem->dataAttribute['datasets'] as $dataSet){
+        foreach ($dataSet['data'] as $data){
+          if ($data > $max){
+            $secondMax = $max;
+            $max = $data;
+          } else if ($data > $secondMax AND $data <= $max){
+            $secondMax = $data;
+          }
+        }
+      }
+      $max = $secondMax;
+
+    } else {
+      foreach ($this->chartItem->dataAttribute['datasets'] as $dataSet){
+        foreach ($dataSet['data'] as $data){
+          if ($data > $max){
+            $max = $data;
+          }
+        }
+      }
+    }
+
+    return $max;
+  }
+
+  /**
+   * @throws \Exception
+   */
+  public function getChartTypeForNativeWidget(): string
+  {
+    if ($this->subTypeModel === null){
+      throw new \Exception('The subTypeModel attribute of StatisticsService is null, use setModels() method before');
+    }
+
+    return $this->subTypeModel->getChartType();
   }
 
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Data\Widget;
+namespace App\Data\Statisitc\TypeModel;
 
 use App\Entity\Widget;
 
-abstract class TopModel extends WidgetModel
+abstract class TopTypeModel extends AbstractTypeModel
 {
   public function __construct()
   {

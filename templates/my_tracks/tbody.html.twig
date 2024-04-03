@@ -2,30 +2,30 @@
 
 {% for track in tbody %}
 
-  {% set lovedImage = 'imgs/not-loved.png' %}
   {% set lovedClass = 'not-loved-track' %}
   {% if not track.loved_track is null %}
-    {% set lovedImage = 'imgs/loved.png' %}
     {% set lovedClass = 'loved-track' %}
   {% endif %}
 
   <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
 
     <td class="px-6 py-4">
+      {# YOUTBE #}
       <a href="{{ track.track_name|youtubeSearchLink(track.artist_name) }}" target="_blank" rel="noopener noreferrer">
         <img src="{{ asset('imgs/youtube.png') }}" style="width: 34px" alt="Search on Youtube" class="inline-block mr-3">
       </a>
-      <a href="#" onclick="loveTrack(this)" class="button-love {{ lovedClass }}" id="{{ 'loved-track-id-' ~ track.track_id }}">
+      {# LOVED TRACK #}
+      <span onclick="loveTrack(this)" class="button-love cursor-pointer {{ lovedClass }}" id="{{ 'loved-track-id-' ~ track.track_id }}">
         <span>&nbsp;</span>
-      </a>
+      </span>
     </td>
 
+    {# ALBUM IMAGE  #}
     <th scope="row" class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-      {% for image in track[0].image %}
-        {% if image.size == 1 %}
-          <img src='{{ image.url }}' alt='{{ track.track_name }}' class="inline-block mr-3">
-        {% endif %}
-      {% endfor %}
+
+      {% if track.image_url is defined %}
+        <img src='{{ track.image_url }}' alt='{{ track.track_name }}' class="inline-block mr-3">
+      {% endif %}
 
       {{ track.track_name }}
     </th>
@@ -34,7 +34,7 @@
 
     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ track.album_name }}</td>
 
-    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ track.count }}</td>
+    <td class="px-4 py-2 font-medium text-gray-900 pl-10 whitespace-nowrap dark:text-white">{{ track.count|number_format(0, ',', ' ') }}</td>
 
   </tr>
 

@@ -1,0 +1,30 @@
+<div style="height: 200px; width: 373px;" class="flex flex-col native-widget-container !p-0">
+
+  <div class="text-gray-900 dark:text-white text-md p-2 flex flex-wrap font-extrabold text-center border-b border-gray-200 rounded-t-lg bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-red-600">
+    Maximum scrobbles
+  </div>
+
+  <div class="my-auto"></div>
+
+  <div class="flex grid grid-cols-3 gap-3 self-center">
+
+    {% include 'statistic_widget/max_scrobble_daily.twig' with {
+      'value' : 79,
+      'subText': 'april 2019'
+    } %}
+
+    {% include 'statistic_widget/max_scrobble_weekly.twig' with {
+      'value' : 310,
+      'subText': 'oct. 2017'
+    } %}
+
+    {% include 'statistic_widget/max_scrobble_monthly.twig' with {
+      'value' : 1859,
+      'subText': 'sept. 2019'
+    } %}
+
+  </div>
+
+  <div class="my-auto"></div>
+
+</div>
