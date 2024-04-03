@@ -54,15 +54,10 @@ class MyPageController extends CustomAbsrtactController
     $artistRepository = $this->entityManager->getRepository(Artist::class);
     $artists = $artistRepository->getTopArtists();
 
-    //top albums
-    $albumRepository = $this->entityManager->getRepository(Album::class);
-    $albums = $albumRepository->getTopAlbums();
-
 
     return $this->render('my_page/index.html.twig', [
       'lastFmUser' => $lastFmUser,
       'artists' => $artists,
-      'albums' => $albums,
       'pagination' => 0,
       'userPlaycount' => 1,
       'activeNavbarItem' => $request->get('_route')
@@ -97,8 +92,31 @@ class MyPageController extends CustomAbsrtactController
   }
 
 
-  #[Route('/myPage/myTracks', name: 'app_myPage_my_tracks')]
-  public function getMyTracks(PaginatorInterface $paginator): Response
+  /**
+   * Return the Html for the "top albums" grid
+   * @return Response
+   */
+  #[Route('/myPage/topAlbums', name: 'app_myPage_topAlbums')]
+  public function getTopAlbums(): Response
+  {
+    //top albums
+    $albumRepository = $this->entityManager->getRepository(Album::class);
+    $albums = $albumRepository->getTopAlbums();
+
+    return $this->render('my_albums/albums_mini.html.twig', [
+      'albums' => $albums
+    ]);
+
+  }
+
+
+  /**
+   * Return the Html for the "top tracks" table
+   * @param PaginatorInterface $paginator
+   * @return Response
+   */
+  #[Route('/myPage/topTracks', name: 'app_myPage_Toptracks')]
+  public function getTopTracks(PaginatorInterface $paginator): Response
   {
     //top tracks
     $trackRepository = $this->entityManager->getRepository(Track::class);
