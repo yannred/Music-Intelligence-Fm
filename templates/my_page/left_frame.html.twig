@@ -6,7 +6,7 @@
   </turbo-frame>
 </div>
 
-{# Albums #}
+{# Top Albums #}
 <div>
   <p><span class="mx-4"><a href="{{ path('app_my_albums') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top albums', 'withLink': true } %}</a></span></p>
   <turbo-frame id="my_page_top_albums" src="{{ path('app_myPage_topAlbums') }}">
@@ -14,16 +14,19 @@
   </turbo-frame>
 </div>
 
+{# Top Artist #}
 <div>
   <p><span class="mx-4"><a href="{{ path('app_my_artists') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top artists', 'withLink': true} %}</a></span></p>
-  <div class="flex justify-center">{% include 'my_artists/artists.html.twig' with {'mini' : true} %}</div>
+  <turbo-frame id="my_page_top_artists" src="{{ path('app_myPage_topArtists') }}">
+      <div class="flex justify-center">{% include 'my_artists/artists.html.twig' with {'mini' : true} %}</div>
+  </turbo-frame>
 </div>
 
 
-{# Tracks #}
+{# Top Tracks #}
 <div>
   <p><span class="mx-4"><a href="{{ path('app_my_tracks') }}">{% include 'base/html/title-h2.html.twig' with {'title': 'Top tracks', 'withLink': true } %}</a></span></p>
-  <turbo-frame id="my_page_top_tracks" src="{{ path('app_myPage_Toptracks') }}">
+  <turbo-frame id="my_page_top_tracks" src="{{ path('app_myPage_topTracks') }}">
     {% include 'base/html/skeleton/tableHomePageSkeleton.html.twig' %}
   </turbo-frame>
 </div>

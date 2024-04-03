@@ -1,42 +1,61 @@
-{% if pagination is defined and pagination == 1 %}
-  <div class="row my-4">
-    <div class="col">
-      {{ knp_pagination_render(artists) }}
-    </div>
-  </div>
-{% endif %}
+{% if not artists is defined %}
 
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-  {% for artist in artists %}
+   <div class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
+     {% include 'my_artists/artistCard.html.twig' %}
+     {% include 'my_artists/artistCard.html.twig' %}
+     {% include 'my_artists/artistCard.html.twig' %}
+     {% include 'my_artists/artistCard.html.twig' %}
+     {% include 'my_artists/artistCard.html.twig' %}
+     {% include 'my_artists/artistCard.html.twig' %}
+   </div>
 
-    {% set artistCount =  "" %}
-    {% if userPlaycount is defined and userPlaycount == 1 %}
-      {% set artistCount =  artist.count %}
+{% else %}
+
+  <turbo-frame id="my_page_top_artists">
+
+    {% if pagination is defined and pagination == 1 %}
+      <div class="row my-4">
+        <div class="col">
+          {{ knp_pagination_render(artists) }}
+        </div>
+      </div>
     {% endif %}
 
-    {% set imageUrl =  "" %}
-    {% for image in artist[0].image %}
-      {% if image.size == 3 %}
-        {% set imageUrl =  image.url %}
-      {% endif %}
-    {% endfor %}
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+      {% for artist in artists %}
 
-    {% include 'my_artists/artistCard.html.twig' with {
-      'image': imageUrl,
-      'title': artist[0].name,
-      'content': artist[0].bioSummary,
-      'userPlaycount': artistCount,
-      'button': 'More about ' ~ artist[0].name,
-      'totalTrack' : artist.totalTrack,
-      'totalAlbum' : artist.totalAlbum,
-    } %}
-  {% endfor %}
-</div>
+        {% set artistCount =  "" %}
+        {% if userPlaycount is defined and userPlaycount == 1 %}
+          {% set artistCount =  artist.count %}
+        {% endif %}
 
-{% if pagination is defined and pagination == 1 %}
-  <div class="row my-4">
-    <div class="col">
-      {{ knp_pagination_render(artists) }}
+        {% set imageUrl =  "" %}
+        {% for image in artist[0].image %}
+          {% if image.size == 3 %}
+            {% set imageUrl =  image.url %}
+          {% endif %}
+        {% endfor %}
+
+        {% include 'my_artists/artistCard.html.twig' with {
+          'image': imageUrl,
+          'title': artist[0].name,
+          'content': artist[0].bioSummary,
+          'userPlaycount': artistCount,
+          'button': 'More about ' ~ artist[0].name,
+          'totalTrack' : artist.totalTrack,
+          'totalAlbum' : artist.totalAlbum,
+        } %}
+      {% endfor %}
     </div>
-  </div>
+
+    {% if pagination is defined and pagination == 1 %}
+      <div class="row my-4">
+        <div class="col">
+          {{ knp_pagination_render(artists) }}
+        </div>
+      </div>
+    {% endif %}
+
+  </turbo-frame>
+
 {% endif %}
