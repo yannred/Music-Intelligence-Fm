@@ -24,8 +24,9 @@ The main functionalitie of Last.fm is scrobbling
 - Top artists, albums, tracks, genres.
 - Customizable statistics dashboard.
 
-Upcoming features :
+Upcoming :
 
+- Script bash for easy installation on Raspberry Pi.
 - Favorites management.
 - Playlist management.
 - Removed scrobbles.
@@ -36,7 +37,7 @@ Upcoming features :
 
 ## Tech Stack
 
-### Languages
+### Main Languages
 
 - [PHP 8.3](https://www.php.net/)
 - [JavaScript ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -48,12 +49,15 @@ Upcoming features :
 
 ### Back-end Libraries
 
-- Symfony main bundles included with the Webapp skeleton
+- Symfony main bundles (Doctrine ORM, Twig, Security, Form, Asset-mapper)
+- [Symfony UX Turbo Bundle for Turbo Frames](https://symfony.com/bundles/ux-turbo)
 - [KNP Paginator Bundle](https://github.com/KnpLabs/KnpPaginatorBundle)
 - [Symfony Messenger Bundle](https://symfony.com/doc/current/components/messenger.html)
 
 ### Front-end Libraries
 
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Hotwired Turbo](https://turbo.hotwired.dev/)
+- [Jquery](https://jquery.com/)
 - [Chart.js](https://www.chartjs.org/)
 - [Gridstack.js](https://gridstackjs.com/)

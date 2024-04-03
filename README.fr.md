@@ -1,4 +1,4 @@
-# Music Intelligence Fm
+# ![Music Intelligence Fm logo](/assets/imgs/music-intelligence-fm.png)
 
 - La version anglaise de ce README est disponible [ici](README.md).
 - Une démo sera bientôt disponible [ici](https://music-intelligence-fm.yann.red/).
@@ -27,8 +27,9 @@ La fonctionnalité principale de Last.fm est le scrobbling.
 - Top artistes, albums, morceaux, genres.
 - Dashboard de statistiques personnalisable.
 
-Features à venir :
+Prochainement :
 
+- Script bash pour une installation facile sur Raspberry Pi.
 - Gestion des favoris.
 - Gestion des playlists.
 - Suppression de scrobbles.
@@ -39,7 +40,7 @@ Features à venir :
 
 ## Stack technique
 
-### Langages
+### Langages principaux
 
 - [PHP 8.3](https://www.php.net/)
 - [JavaScript ES6](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -51,13 +52,15 @@ Features à venir :
 
 ### Librairies Back-end
 
-- Symfony main bundles included with the Webapp skeleton
+- Symfony main bundles (Doctrine ORM, Twig, Security, Form, Asset-mapper)
+- [Symfony UX Turbo Bundle for Turbo Frames](https://symfony.com/bundles/ux-turbo)
 - [KNP Paginator Bundle](https://github.com/KnpLabs/KnpPaginatorBundle)
 - [Symfony Messenger Bundle](https://symfony.com/doc/current/components/messenger.html)
 
 ### Librairies Front-end
 
-- [Jquery](https://jquery.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Hotwired Turbo](https://turbo.hotwired.dev/)
+- [Jquery](https://jquery.com/)
 - [Chart.js](https://www.chartjs.org/)
 - [Gridstack.js](https://gridstackjs.com/)
