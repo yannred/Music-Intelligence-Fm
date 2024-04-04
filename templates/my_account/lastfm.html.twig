@@ -1,6 +1,5 @@
-<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Last.fm</h3>
-<p class="mb-2"></p>
-<div>
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Last.fm</h3>
+<div class="w-3/4 mx-auto">
 
   {{ form_start(form) }}
 
@@ -8,15 +7,9 @@
     {{ form_errors(form) }}
   </div>
 
-
     {% include 'base/form/input.html.twig' with {'input': form.email, 'type' : 'hidden' } %}
-
     {% include 'base/form/input.html.twig' with {'input': form.password, 'type' : 'hidden'} %}
-
-
-
     {% include 'base/form/input.html.twig' with {'input': form.userName, 'type' : 'hidden' } %}
-
 
   <div class="my-3">
     <div class="col mt-1 mr-2">{% include 'base/form/label.html.twig' with {'input': form.lastFmUserName} %}</div>
