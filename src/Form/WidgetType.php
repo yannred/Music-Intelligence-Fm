@@ -17,6 +17,7 @@ class WidgetType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
+      ->setAction($options['action'])
       ->add('wording', null, ['label' => 'Title', 'required' => true])
       ->add('comment', null, ['label' => 'Comments', 'required' => false])
 

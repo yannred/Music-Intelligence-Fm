@@ -37,7 +37,7 @@ class ChartController extends AbstractController
     //create a new grid if no grid is found
     $grid = $this->entityManager->getRepository(WidgetGrid::class)->findOneBy(['user' => $this->security->getUser(), 'defaultGrid' => true]);
     if ($grid === null) {
-      $this->createGrid();
+      $this->userWidgetGrid = $this->statisticsService->createGrid();
     } else {
       $this->userWidgetGrid = $grid;
     }
@@ -114,22 +114,6 @@ class ChartController extends AbstractController
     $response->setContent(json_encode($chart));
 
     return $response;
-  }
-
-
-  //TODO : move in WidgetGrid Entity
-  private function createGrid()
-  {
-    $grid = new WidgetGrid();
-    $grid->setUser($this->security->getUser());
-    $grid->setDefaultGrid(true);
-    $grid->setCode('default');
-    $grid->setWording('Created by default (' . date('Y-m-d H:i:s') . ')');
-
-    $this->entityManager->persist($grid);
-    $this->entityManager->flush();
-
-    $this->userWidgetGrid = $grid;
   }
 
 }

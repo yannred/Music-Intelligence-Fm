@@ -2,10 +2,16 @@
   {% set onclick = '' %}
 {% endif %}
 
+{% if not dataModalHide is defined %}
+  {% set dataModalHide = '' %}
+{% else %}
+  {% set dataModalHide = 'data-modal-hide=' ~ dataModalHide %}
+{% endif %}
+
 {% if url is defined %}
 <a href="{{ url }}">
 {% endif %}
-  <button type="button" class="button-icon-std ml-2" onclick="{{ onclick }}" >
+  <button type="button" class="button-icon-std ml-2" onclick="{{ onclick }}" {{ dataModalHide }}>
     {% include 'base/icon/svg-icon.html.twig' with {'icon' : 'close', 'style' : 'height:21px;', 'alt' : 'Cancel'}%}
   </button>
 {% if url is defined %}

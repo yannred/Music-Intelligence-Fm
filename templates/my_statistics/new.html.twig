@@ -12,21 +12,22 @@
 
 {% block body %}
 
-  {% include 'base/html/page-title.html.twig' with {'title': 'Your personal statistics'} %}
-
-  <hr class="mt-3 mb-3" />
 
 
+<div class="py-8 px-4 mx-auto w-1/2 lg:py-16  lg:gap-16">
 
-  <div class="py-8 px-4 mx-auto w-1/2 lg:py-16  lg:gap-16">
+  <turbo-frame id="static-modal0" target="_top" class="w-full">
 
-    <div class="w-full w-full p-6 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-        {{ subTitle }}
-      </h2>
+    <div class="w-full p-6 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+      <div class="flex">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+          {{ subTitle }}
+        </h2>
+      </div>
       <br class="my-2" />
       <form method="{{ form.vars.method }}" action="{{ form.vars.action }}" class="max-w-sm mx-auto">
 
+        {# TODO : color error notif #}
         <div>
           {{ form_errors(form) }}
         </div>
@@ -86,12 +87,12 @@
         {% include 'base/html/button/cancel.html.twig' with {'onclick' : 'history.back();'} %}
       </div>
 
-      {{ form_end(form) }}
-
-      </form>
+     {{ form_end(form) }}
     </div>
 
-  </div>
+  </turbo-frame>
+
+</div>
 
 
 

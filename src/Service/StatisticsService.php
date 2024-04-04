@@ -7,6 +7,7 @@ use App\Data\ChartOptions;
 use App\Data\Statisitc\SubTypeModel\AbstractSubTypeModel;
 use App\Data\Statisitc\TypeModel\AbstractTypeModel;
 use App\Entity\Widget;
+use App\Entity\WidgetGrid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -63,6 +64,25 @@ class StatisticsService
     if ($this->typeModel === null || $this->subTypeModel === null){
       throw new \Exception('TypeModel or subTypeModel can\'t be found for the widget');
     }
+  }
+
+
+  /**
+   * Create a new grid for the curent user
+   * @return WidgetGrid
+   */
+  public function createGrid(): WidgetGrid
+  {
+    $grid = new WidgetGrid();
+    $grid->setUser($this->security->getUser());
+    $grid->setDefaultGrid(true);
+    $grid->setCode('default');
+    $grid->setWording('Created by default (' . date('Y-m-d H:i:s').')');
+
+    $this->em->persist($grid);
+    $this->em->flush();
+
+    return $grid;
   }
 
   public function generateContent(?Widget $widget, array $parameters): string

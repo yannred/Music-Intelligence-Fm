@@ -6,23 +6,66 @@
   <link href="{{ asset('styles/gridstack_layout.css') }}" rel="stylesheet">
 {% endblock %}
 
+{% block head %}
+  <meta name="turbo-visit-control" content="reload">
+{% endblock %}
+
 
 {% block body %}
+
+
+  {% if not modify is defined %}
+    {% set submitText = 'Create' %}
+    {% set subTitle = 'Create new Statistic' %}
+  {% else %}
+    {% set submitText = 'Update' %}
+    {% set subTitle = 'Update Statistic' %}
+  {% endif %}
+
 
   {% include 'base/html/page-title.html.twig' with {'title': 'Your personal statistics'} %}
   <hr class="mt-3 mb-3" />
 
   <div>
 
-    <div class="grid-stack">
-      {# ********* GRID STACK HERE ********* #}
-    </div>
+    {# ********* GRID STACK HERE ********* #}
+    <div class="grid-stack"></div>
 
+
+    {# Modal toggle BUTTON for create new widget #}
     <p>
-      <a href="{{ path('app_widget_new_statistic') }}">
-        <button type="button" id="button-add-widget-page" class="button-colored-std" style="display: none">Add new statistic</button>
-      </a>
+      {# <a href="{{ path('app_widget_new_statistic') }}"></a> #}
+      <button data-modal-target="static-modal" data-modal-toggle="static-modal" type="button" id="button-add-widget-page" class="button-colored-std" style="display: none">Add new statistic</button>
     </p>
+
+    {# Modal lazy content #}
+    <div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+       class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    >
+      <div class="relative py-8 px-4 mx-auto w-1/2 lg:py-16 lg:gap-16" style="height: 842px;">
+
+        <div class="absolute right-12 top-24">{% include 'base/html/button/cancel.html.twig' with {'dataModalHide' : 'static-modal'} %}</div>
+
+        <turbo-frame loading="lazy" id="static-modal0" src="{{ path('app_widget_new_statistic') }}" class="w-full">
+
+          <div class="flex flex-col w-full h-full p-6 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+            <div class="flex">
+              <div class="w-1/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: 30px;"></div>
+              <div class="mx-auto"></div>
+  {#            {% include 'base/html/button/cancel.html.twig' with {'dataModalHide' : 'static-modal'} %}#}
+            </div>
+
+            <div class="my-auto"></div>
+            <div class="flex self-center justify-center items-center text-center">
+              {% include 'base/spinner.html.twig' %}
+            </div>
+            <div class="my-auto"></div>
+          </div>
+        </turbo-frame>
+      </div>
+
+
+    </div>
 
 
     <script>loadGrid();</script>
