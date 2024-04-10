@@ -7,7 +7,12 @@
 {% endblock %}
 
 {% block head %}
-  <meta name="turbo-visit-control" content="reload">
+{#  <meta name="turbo-visit-control" content="reload">#}
+{% endblock %}
+
+{% block javascripts %}
+  {% block importmap %}{{ importmap('app') }}{% endblock %}
+  <script src="{{ asset('scripts/widget.js') }}"></script>
 {% endblock %}
 
 
@@ -34,8 +39,9 @@
 
     {# Modal toggle BUTTON for create new widget #}
     <p>
-      {# <a href="{{ path('app_widget_new_statistic') }}"></a> #}
-      <button data-modal-target="static-modal" data-modal-toggle="static-modal" type="button" id="button-add-widget-page" class="button-colored-std" style="display: none">Add new statistic</button>
+      <a href="{{ path('app_widget_new_statistic') }}" data-turbo-frame="static-modal0">
+        <button data-modal-target="static-modal" data-modal-toggle="static-modal" type="button" id="button-add-widget-page" class="button-colored-std" style="display: none">Add new statistic</button>
+      </a>
     </p>
 
     {# Modal lazy content #}
@@ -44,15 +50,14 @@
     >
       <div class="relative py-8 px-4 mx-auto w-1/2 lg:py-16 lg:gap-16" style="height: 842px;">
 
-        <div class="absolute right-12 top-24">{% include 'base/html/button/cancel.html.twig' with {'dataModalHide' : 'static-modal'} %}</div>
+        <div class="absolute right-12 top-24">{% include 'base/html/button/cancel.html.twig' with {'onclick' : 'hideModal()'} %}</div>
 
-        <turbo-frame loading="lazy" id="static-modal0" src="{{ path('app_widget_new_statistic') }}" class="w-full">
+        <turbo-frame id="static-modal0" class="w-full">
 
           <div class="flex flex-col w-full h-full p-6 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
             <div class="flex">
               <div class="w-1/4 bg-gray-200 rounded-full dark:bg-gray-700" style="height: 30px;"></div>
               <div class="mx-auto"></div>
-  {#            {% include 'base/html/button/cancel.html.twig' with {'dataModalHide' : 'static-modal'} %}#}
             </div>
 
             <div class="my-auto"></div>

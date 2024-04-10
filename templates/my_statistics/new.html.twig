@@ -13,7 +13,6 @@
 {% block body %}
 
 
-
 <div class="py-8 px-4 mx-auto w-1/2 lg:py-16  lg:gap-16">
 
   <turbo-frame id="static-modal0" target="_top" class="w-full">
@@ -25,11 +24,15 @@
         </h2>
       </div>
       <br class="my-2" />
-      <form method="{{ form.vars.method }}" action="{{ form.vars.action }}" class="max-w-sm mx-auto">
+      <form method="{{ form.vars.method }}" action="{{ form.vars.action }}" class="max-w-sm mx-auto" data-turbo-frame="_top">
 
         {# TODO : color error notif #}
         <div>
           {{ form_errors(form) }}
+          {# For case when turbo-frame is used, notification is duplicated in the frame #}
+          {% if notifications is defined %}
+            {% include 'base/notifications.html.twig' with {'notifications' : notifications} %}
+          {% endif %}
         </div>
 
         <div class="my-3">

@@ -159,30 +159,24 @@ class Widget
    * add 1 day to the end date if it's the same as the start date
    * check if the start date is before the end date
    * Complete the date range if one of the date is null (start date to 1970-01-01 and end date to today)
-   * @return bool
+   * @return void
    */
-  public function validateDateRange(): bool
+  public function validateDateRange(): void
   {
-    if ($this->getDateFrom() == $this->getDateTo()) {
+    if (null !== $this->getDateTo() && $this->getDateFrom() == $this->getDateTo()) {
       //add 1 day
       $this->setDateTo($this->getDateTo()->modify('+1 day'));
     }
 
-    if ($this->getDateFrom() == null && $this->getDateTo() != null) {
+    if ($this->getDateFrom() == null) {
       //set datefrom to january 1st 1970
       $this->setDateFrom(new \DateTime('1970-01-01'));
     }
 
-    if ($this->getDateFrom() != null && $this->getDateTo() == null) {
+    if ($this->getDateTo() == null) {
       //set dateto to today
       $this->setDateTo(new \DateTime());
     }
-
-    if ($this->getDateFrom() > $this->getDateTo()) {
-      return false;
-    }
-
-    return true;
   }
 
 
@@ -216,7 +210,7 @@ class Widget
   public function getModifyButton($class = 'modify-widget'): string
   {
     $javascriptFunction = 'modifyWidget("' . $this->getId() . '")';
-    return '<button onclick=' . $javascriptFunction . ' class="'.$class.'">M</button>';
+    return '<a href="/myPage/myStatistics/new/' . $this->getId() . '" data-turbo-frame="static-modal0" onclick="showModal()"><button class="'.$class.'">M</button></a>';
   }
 
   /**

@@ -93,7 +93,7 @@ class MyStatisticsController extends CustomAbsrtactController
         /** @var Widget $widget */
         $widget = $form->getData();
 
-        //controls
+        //TODO : create custom validator
         //Type and SubType are required
         if ($widget->getTypeWidget() == 0) {
           $notifications[] = new Notification('Statistic type is required', 'warning');
@@ -104,21 +104,11 @@ class MyStatisticsController extends CustomAbsrtactController
           $success = false;
         }
 
-        //Custom date range is required
-        if ($widget->getDateType() == Widget::DATE_TYPE__CUSTOM){
-          if ($widget->getDateFrom() === null && $widget->getDateTo() === null) {
-            $notifications[] = new Notification('Custom date range is required', 'warning');
-            $success = false;
-          } elseif (! $widget->validateDateRange()) {
-            $notifications[] = new Notification('Invalid date range', 'warning');
-            $success = false;
-          }
-        }
-
-
+        //All Controls OK
         if ($success) {
 
-          //All Controls OK
+          $widget->validateDateRange();
+
           $widget->setWidgetGrid($this->userWidgetGrid);
 
           $model = $widget->getTypeModel();

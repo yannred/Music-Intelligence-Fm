@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Validator as ValidatorCustom;
 
 class WidgetType extends AbstractType
 {
@@ -62,29 +63,67 @@ class WidgetType extends AbstractType
       ])
 
 
-      /** Make visible the dateFrom and dateTo fields if the dateType is "custom" */
-      ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
+      ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event): void {
         /** @var Widget $widget */
         $widget = $event->getData();
         /** @var Form $form */
         $form = $event->getForm();
-
-        if ($widget != null && $widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
+        if ($widget['dateType'] == Widget::DATE_TYPE__CUSTOM){
           $form->remove('dateFrom');
           $form->remove('dateTo');
           $form
             ->add('dateFrom', null, [
               'label' => 'Date from',
               'required' => false,
-              'attr'   =>  ['class'   => 'period-custom', 'style' => '']
+              'attr'   =>  ['class'   => 'period-custom', 'style' => ''],
+              'constraints' => [
+                new ValidatorCustom\CustomDateRangeForWidgetForm(
+                  ValidatorCustom\CustomDateRangeForWidgetForm::FROM_FIELD,
+                  $widget['dateFrom'],
+                  $widget['dateTo']
+                ),
+              ]
             ])
             ->add('dateTo', null, [
               'label' => 'Date to',
               'required' => false,
-              'attr'   =>  ['class'   => 'period-custom', 'style' => '']
+              'attr'   =>  ['class'   => 'period-custom', 'style' => ''],
+              'constraints' => [
+                new ValidatorCustom\CustomDateRangeForWidgetForm(
+                  ValidatorCustom\CustomDateRangeForWidgetForm::TO_FIELD,
+                  $widget['dateFrom'],
+                  $widget['dateTo']
+                ),
+              ]
             ]);
         }
       })
+
+
+
+      /** Make visible the dateFrom and dateTo fields if the dateType is "custom" */
+//      ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event): void {
+//        /** @var Widget $widget */
+//        $widget = $event->getData();
+//        /** @var Form $form */
+//        $form = $event->getForm();
+//
+//        if ($widget != null && $widget->getDateType() == Widget::DATE_TYPE__CUSTOM) {
+//          $form->remove('dateFrom');
+//          $form->remove('dateTo');
+//          $form
+//            ->add('dateFrom', null, [
+//              'label' => 'Date from',
+//              'required' => false,
+//              'attr'   =>  ['class'   => 'period-custom', 'style' => '']
+//            ])
+//            ->add('dateTo', null, [
+//              'label' => 'Date to',
+//              'required' => false,
+//              'attr'   =>  ['class'   => 'period-custom', 'style' => '']
+//            ]);
+//        }
+//      })
       /** Set the default value for fontColor and backgroundColor */
       /** Make visible the dateFrom and dateTo fields if the dateType is "custom" */
       ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event): void {
@@ -138,5 +177,10 @@ class WidgetType extends AbstractType
     $resolver->setDefaults([
       'data_class' => Widget::class,
     ]);
+  }
+
+
+  private function deduceIncompleteDate (){
+
   }
 }

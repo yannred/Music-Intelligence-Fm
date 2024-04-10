@@ -56,3 +56,31 @@ function changeTab(tabSelected) {
 }
 
 
+/**
+ * Show the modal
+ */
+function showModal() {
+  const targetEl = document.getElementById("static-modal");
+  if (targetEl){
+    console.log('Modal');
+    const options = {};
+    const modal = new Modal(targetEl, options);
+    modal.show();
+  } else {
+    console.error('Modal not found');
+  }
+}
+
+/**
+ * Hide the modal
+ */
+function hideModal() {
+  const targetEl = document.getElementById("static-modal");
+  if (targetEl){
+    const options = {};
+    const modal = new Modal(targetEl, options);
+    modal.hide();
+  } else {
+    console.error('Modal not found');
+  }
+}
